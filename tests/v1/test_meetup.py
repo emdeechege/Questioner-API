@@ -29,7 +29,7 @@ class TestMeetup(unittest.TestCase):
         self.assertEqual(meet.status_code, 201)
 
     def test_all_meetups_fetch(self):
-        all_meetups = self.client.get('api/v1/meetups')
+        all_meetups = self.client.get("api/v1/meetups")
 
         result = json.loads(all_meetups.data.decode())
         self.assertEqual(result["message"], "Success")
