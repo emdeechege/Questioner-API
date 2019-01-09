@@ -5,27 +5,26 @@ from uuid import uuid4
 
 v1_meetup_blueprint = Blueprint('meetups', __name__, url_prefix='/api/v1')
 
-meetup = Meetup()
+meetups = Meetup()
 
 
 @v1_meetup_blueprint.route('/meetups', methods=['POST'])
-def post_meetup():
+def create_meetup():
+    """ endpoint for creating meetup"""
+
     data = request.get_json()
+    if not data:
+        return jsonify({"message": "Data set cannot be empty"})
 
-    meetupId = len(meetup.all_meetup_records) + 1
-    createdOn = datetime.now()
-    location = data["location"]
-    images = data["images"]
-    happeningOn = data["happeningOn"]
-    tags = data["tags"]
+    title = data.get('title')
+    createdOn = data.get('time')
+    organizer = data.get('organizer')
+    images = data.get("images")
+    location = data.get('location')
+    happeningOn = data.get('happeningOn')
+    tags = data.get('tags')
 
-    meetup.create_meetup(meetupId, createdOn, location, images, happeningOn, tags)
-    return jsonify({
-        "status": 201,
-        "data": [{
-            "topic": "The topic",
-            "location": "The venue",
-            "happeningOn": "The meetup date.",
-            "tags": ["tag1", "tag2", "tag3"]
-        }]
-    }), 201
+    meet = jsonify(meetups.create_meetup(title, createdOn, organizer,
+                                         images, location, happeningOn, tags))
+    meet.status_code = 201
+    return meet
