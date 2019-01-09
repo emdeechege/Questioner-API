@@ -15,7 +15,7 @@ class TestMeetup(unittest.TestCase):
             "organizer": "Andela",
             "images": 'me.jpg',
             "location": "Nairobi",
-            "date": "02 01 2019 8:00am",
+            "happeningOn": "02 01 2019 8:00am",
             "createdOn":  "02 01 2019 5:00pm",
             "tags": ["python", "hackerthon"]
         }
@@ -27,6 +27,13 @@ class TestMeetup(unittest.TestCase):
         meet = self.client.post('/api/v1/meetups', data=json.dumps(self.meetup),
                                 content_type='application/json')
         self.assertEqual(meet.status_code, 201)
+
+    def test_all_meetups_fetch(self):
+        all_meetups = self.client.get('api/v1/meetups')
+
+        result = json.loads(all_meetups.data.decode())
+        self.assertEqual(result["message"], "Success")
+        self.assertEqual(all_meetups.status_code, 200)
 
 
 if __name__ == '__main__':
