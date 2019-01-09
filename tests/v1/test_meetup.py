@@ -28,3 +28,7 @@ class TestMeetup(unittest.TestCase):
         self.assertEqual(res.status_code, 201)
         self.assertIn("The meetup date.", str(self.meetup))
         self.assertIn("images", str(self.meetup))
+
+
+if __name__ == '__main__':
+    unittest.main()
