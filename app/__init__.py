@@ -1,7 +1,7 @@
 '''Creating app'''
 import os
 from flask import Flask
-from app.api.v1.views.meetup_views import v1_meetup_blueprint
+from .api.v1.views.meetup_views import v1_meetup_blueprint
 # from instance.config import app_config
 # """importing the configurations from the .config file which is in the instance folder"""
 
