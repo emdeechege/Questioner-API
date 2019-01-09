@@ -1,0 +1,30 @@
+from flask import jsonify, Blueprint, request, json
+from ..models.meetups_models import Meetup
+from datetime import datetime
+from uuid import uuid4
+
+v1_meetup_blueprint = Blueprint('meetups', __name__, url_prefix='/api/v1')
+
+meetups = Meetup()
+
+
+@v1_meetup_blueprint.route('/meetups', methods=['POST'])
+def create_meetup():
+    """ endpoint for creating meetup"""
+
+    data = request.get_json()
+    if not data:
+        return jsonify({"message": "Data set cannot be empty"})
+
+    title = data.get('title')
+    createdOn = data.get('time')
+    organizer = data.get('organizer')
+    images = data.get("images")
+    location = data.get('location')
+    happeningOn = data.get('happeningOn')
+    tags = data.get('tags')
+
+    meet = jsonify(meetups.create_meetup(title, createdOn, organizer,
+                                         images, location, happeningOn, tags))
+    meet.status_code = 201
+    return meet

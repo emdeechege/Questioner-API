@@ -13,9 +13,10 @@ class TestMeetup(unittest.TestCase):
         self.meetup = {
             "title": "Python Hackerthon",
             "organizer": "Andela",
+            "images": 'me.jpg',
             "location": "Nairobi",
-            "from_date": "02 01 2019 8:00am",
-            "to_date":  "02 01 2019 5:00pm",
+            "date": "02 01 2019 8:00am",
+            "createdOn":  "02 01 2019 5:00pm",
             "tags": ["python", "hackerthon"]
         }
 
@@ -23,11 +24,9 @@ class TestMeetup(unittest.TestCase):
         del self.meetup
 
     def test_api_can_create_a_meetup_record(self):
-        res = self.client.post('/api/v1/meetups', data=json.dumps(self.meetup),
-                               content_type='application/json')
-        self.assertEqual(res.status_code, 201)
-        self.assertIn("The meetup date.", str(self.meetup))
-        self.assertIn("images", str(self.meetup))
+        meet = self.client.post('/api/v1/meetups', data=json.dumps(self.meetup),
+                                content_type='application/json')
+        self.assertEqual(meet.status_code, 201)
 
 
 if __name__ == '__main__':
