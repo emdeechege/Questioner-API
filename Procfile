@@ -1,1 +1,1 @@
-web: gunicorn app:uniquequestioner
+web: gunicorn app:app
