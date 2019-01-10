@@ -20,8 +20,8 @@ class TestQuestions(unittest.TestCase):
     def tearDown(self):
         del self.question
 
-    def test_post question(self):
+    def test_post_question(self):
         question = self.client.post(
-            'api/v1/meetups', data=json.dumps(self.question), content_type='application/json')
+            'api/v1/questions', data=json.dumps(self.question), content_type='application/json')
 
-        self.assertEqual(meet.status_code, 201)
+        self.assertEqual(question.status_code, 201)
