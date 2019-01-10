@@ -8,5 +8,12 @@ config_name = os.getenv("APP_SETTINGS")
 """Gets the app settings defined in the .env file"""
 app = create_app()
 """defining the configuration to be used"""
+
+
+@app.route('/')
+def hello_world():
+    return 'Hello Questioner!'
+
+
 if __name__ == '__main__':
     app.run()
