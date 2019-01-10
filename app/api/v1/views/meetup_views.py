@@ -39,3 +39,14 @@ def getall():
         "message": "Success",
         "meetups": data
     }), 200)
+
+
+@v1_meetup_blueprint.route('/meetups/<int:meetup_id>', methods=['GET'])
+def get_one_meetup(meetup_id):
+    '''querry meetups by id'''
+    meetup = meetups.getone_meetup(meetup_id)
+    if meetup:
+        return make_response(jsonify({
+            'message': 'Success',
+            'meetup': meetup[0]}), 200)
+    return make_response(jsonify({'message': 'meetup not found'}), 404)
