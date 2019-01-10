@@ -9,7 +9,7 @@ class TestVoting(unittest.TestCase):
     def setUp(self):
         self.app = create_app()
         self.client = self.app.test_client()
-        self.upvote = {
+        self.response = {
             "postedBy": "user_id",
             "meetup_id": "meetup_id",
             "title": "Why now?",
@@ -18,16 +18,16 @@ class TestVoting(unittest.TestCase):
         }
 
     def tearDown(self):
-        del self.upvote
+        del self.response
 
     def test_upvote(self):
         upvote = self.client.patch('/api/v1/questions/1/upvote',
-                                   data=json.dumps(self.upvote), content_type='application/json')
+                                   data=json.dumps(self.response), content_type='application/json')
 
         self.assertEqual(upvote.status_code, 201)
 
     def test_downvote(self):
         downvote = self.client.patch('/api/v1/questions/1/downvote',
-                                     data=json.dumps(self.downvote), content_type='application/json')
+                                     data=json.dumps(self.response), content_type='application/json')
 
         self.assertEqual(downvote.status_code, 201)
