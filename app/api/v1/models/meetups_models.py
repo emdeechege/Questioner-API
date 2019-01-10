@@ -28,3 +28,7 @@ class Meetup:
 
     def getall_meetups(self):
         return self.db
+
+    def getone_meetup(self, meetupId):
+        meetup = [meetup for meetup in meetups if meetup["meetup_id"] == meetupId]
+        return meetup
