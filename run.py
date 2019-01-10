@@ -12,7 +12,7 @@ app = create_app()
 
 @app.route('/')
 def hello_world():
-    return 'Hello Questioner!'
+    return 'Hello Questioner API!'
 
 
 if __name__ == '__main__':
