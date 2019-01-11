@@ -1,4 +1,4 @@
-language:       python
+language:        python
 python:
   - "3.6"
 
@@ -12,7 +12,7 @@ script:
 
 after_success:
   - coveralls
-  - coverage xml
   - codeclimate-test-reporter
+  - codecov
 
-cache:          pip
+cache:           pip
