@@ -52,7 +52,7 @@ def get_one_meetup(meetup_id):
     return make_response(jsonify({'message': 'meetup not found'}), 404)
 
 
-@v1_meetup_blueprint.route('/meetups/<int: meetup_id>/rsvp', methods=['POST'])
+@v1_meetup_blueprint.route('/meetups/<int:meetup_id>/rsvp', methods=['POST'])
 def rsvp_meetup(meetup_id):
     """ endpoint for rsvp meetup """
     data = request.get_json()
