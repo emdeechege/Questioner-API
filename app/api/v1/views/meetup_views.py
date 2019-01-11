@@ -50,3 +50,17 @@ def get_one_meetup(meetup_id):
             'message': 'Success',
             'meetup': meetup[0]}), 200)
     return make_response(jsonify({'message': 'meetup not found'}), 404)
+
+
+@v1_meetup_blueprint.route('/meetups/<int: meetup_id>/rsvp', methods=['POST'])
+def rsvp_meetup(meetup_id):
+    """ endpoint for rsvp meetup """
+    data = request.get_json()
+
+    user_id = data.get('user_id')
+    meetup_id = meetup_id
+    response = data.get('response')
+
+    res = jsonify(meetups.post_rsvp(user_id, meetup_id, response))
+    res.status_code = 201
+    return res
