@@ -1,4 +1,7 @@
-[![Build Status](https://www.travis-ci.org/emdeechege/Questionaire-API.svg?branch=master)](https://www.travis-ci.org/emdeechege/Questionaire-API)
+[![Build Status](https://www.travis-ci.org/emdeechege/Questionaire-API.svg?branch=develop)](https://www.travis-ci.org/emdeechege/Questionaire-API)
+[![Coverage Status](https://coveralls.io/repos/github/emdeechege/Questionaire-API/badge.svg)](https://coveralls.io/github/emdeechege/Questionaire-API)
+[![codecov](https://codecov.io/gh/emdeechege/Questionaire-API/branch/develop/graph/badge.svg)](https://codecov.io/gh/emdeechege/Questionaire-API)
+
 
 # Questioner
 
