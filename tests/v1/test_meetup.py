@@ -20,6 +20,11 @@ class TestMeetup(unittest.TestCase):
             "tags": ["python", "hackerthon"]
         }
 
+        self.rsvp = {
+            "user_id": "1",
+            "response": "Yes"
+        }
+
     def tearDown(self):
         del self.meetup
 
@@ -55,6 +60,14 @@ class TestMeetup(unittest.TestCase):
         res = json.loads(response.data.decode())
         self.assertEqual(res["message"], "meetup not found")
         self.assertEqual(response.status_code, 404)
+
+    def test_rsvp_meetup(self):
+        '''test for rsvp'''
+        response = self.client.post("api/v1/meetups/1/rsvp",
+                                    data=json.dumps(self.rsvp), content_type='application/json')
+        res = json.loads(response.data.decode())
+        self.assertIn("RSVP successfull", str(res))
+        self.assertEqual(response.status_code, 201)
 
 
 if __name__ == '__main__':
