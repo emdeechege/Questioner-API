@@ -21,7 +21,7 @@ This project is managed using a pivotal tracker board. [View the board here](htt
 
 Find the documentation [here](https://documenter.getpostman.com/view/5550526/RznHGwbr)
 
-[![Heroku link](https://uniquequestioner.herokuapp.com)
+[Heroku link](https://uniquequestioner.herokuapp.com)
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/71ff9e20905a7f90c3a6)
 

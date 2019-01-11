@@ -12,7 +12,6 @@ script:
 
 after_success:
   - coveralls
-  - codeclimate-test-reporter
   - codecov --token=86e24f0e-2928-4a66-8f48-6fc5cbee8327
 
 cache:           pip
