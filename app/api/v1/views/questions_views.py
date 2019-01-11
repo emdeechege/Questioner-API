@@ -64,7 +64,11 @@ def upvote(question_id):
 @v1_question_blueprint.route('/questions/<int:question_id>/downvote', methods=['PATCH'])
 def downvote(question_id):
     """ endpoint for downvote question """
-    question_id = question_id
-    res = jsonify(questions.downvote_question(question_id))
-    res.status_code = 201
-    return res
+    one_question = questions.getone_question(question_id)
+    if one_question:
+        my_question = one_question[0]
+        my_question["votes"] = my_question["votes"] - 1
+        return make_response(jsonify({
+            "status": 201,
+            "data": my_question
+        }), 201)

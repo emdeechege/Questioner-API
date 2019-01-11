@@ -14,22 +14,8 @@ class TestQuestions(unittest.TestCase):
             "question_id": "question_id",
             "title": "Why now?",
             "content": "True or false",
+            "votes": 0
 
-        }
-        self.upvote = {
-            "postedBy": "user_id",
-            "question_id": "question_id",
-            "title": "Why now?",
-            "content": "True or false",
-            "votes": 1
-        }
-
-        self.downvote = {
-            "postedBy": "user_id",
-            "question_id": "question_id",
-            "title": "Why now?",
-            "content": "True or false",
-            "votes": 1
         }
 
     def tearDown(self):
@@ -66,14 +52,19 @@ class TestQuestions(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_upvote(self):
-
+        # post one question
+        question = self.client.post(
+            'api/v1/questions', data=json.dumps(self.question), content_type='application/json')
         upvote = self.client.patch('/api/v1/questions/1/upvote',
-                                   data=json.dumps(self.upvote), content_type='application/json')
+                                   data=json.dumps(self.question), content_type='application/json')
 
         self.assertEqual(upvote.status_code, 201)
 
     def test_downvote(self):
+        # post one question
+        question = self.client.post(
+            'api/v1/questions', data=json.dumps(self.question), content_type='application/json')
         downvote = self.client.patch('/api/v1/questions/1/downvote',
-                                     data=json.dumps(self.downvote), content_type='application/json')
+                                     data=json.dumps(self.question), content_type='application/json')
 
         self.assertEqual(downvote.status_code, 201)
