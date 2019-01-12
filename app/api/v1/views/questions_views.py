@@ -59,6 +59,7 @@ def upvote(question_id):
             "status": 201,
             "data": my_question
         }), 201)
+    return make_response(jsonify({'message': 'Question not found'}), 404)
 
 
 @v1_question_blueprint.route('/questions/<int:question_id>/downvote', methods=['PATCH'])
@@ -72,3 +73,4 @@ def downvote(question_id):
             "status": 201,
             "data": my_question
         }), 201)
+    return make_response(jsonify({'message': 'Question not found'}), 404)
