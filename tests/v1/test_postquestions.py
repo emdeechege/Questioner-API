@@ -15,7 +15,6 @@ class TestQuestions(unittest.TestCase):
             "title": "Why now?",
             "content": "True or false",
             "votes": 0
-
         }
 
     def tearDown(self):
@@ -53,9 +52,7 @@ class TestQuestions(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_upvote_question(self):
-        # post one question
-        question = self.client.post(
-            'api/v1/questions', data=json.dumps(self.question), content_type='application/json')
+
         upvote = self.client.patch('/api/v1/questions/1/upvote',
                                    data=json.dumps(self.question), content_type='application/json')
         upvote_data = json.loads(upvote.data.decode())

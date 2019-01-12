@@ -29,9 +29,6 @@ class Questions(BaseModels):
     def getone_question(self, question_id):
         question = self.check_item(question_id, "question_id", questions)
         return question
-        # question = [
-        #     question for question in questions if question['question_id'] == question_id]
-        # return question
 
     def upvote_question(self, question_id):
         """ method to upvote question """
