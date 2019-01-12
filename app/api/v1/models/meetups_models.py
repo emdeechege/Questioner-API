@@ -1,10 +1,11 @@
 from datetime import datetime
+from .basemodels import BaseModels
 
 meetups = []
 rsvp = []
 
 
-class Meetup:
+class Meetup(BaseModels):
     """ Creates the meetup record model """
 
     def __init__(self):
@@ -32,7 +33,7 @@ class Meetup:
         return self.db
 
     def getone_meetup(self, meetup_id):
-        meetup = [meetup for meetup in meetups if meetup["meetup_id"] == meetup_id]
+        meetup = self.check_item(meetup_id, "meetup_id", meetups)
         return meetup
 
     def post_rsvp(self, user_id, meetup_id, response):

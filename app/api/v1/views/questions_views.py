@@ -57,8 +57,10 @@ def upvote(question_id):
         my_question["votes"] = my_question["votes"] + 1
         return make_response(jsonify({
             "status": 201,
+            "message": "upvote successfull",
             "data": my_question
         }), 201)
+    return make_response(jsonify({'message': 'question not found'}), 404)
 
 
 @v1_question_blueprint.route('/questions/<int:question_id>/downvote', methods=['PATCH'])
@@ -70,5 +72,7 @@ def downvote(question_id):
         my_question["votes"] = my_question["votes"] - 1
         return make_response(jsonify({
             "status": 201,
+            "message": "downvote successfull",
             "data": my_question
         }), 201)
+    return make_response(jsonify({'message': 'question not found'}), 404)

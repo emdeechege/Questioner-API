@@ -28,19 +28,19 @@ class TestMeetup(unittest.TestCase):
     def tearDown(self):
         del self.meetup
 
-    def test_api_can_create_a_meetup_record(self):
+    def test_create_meetup(self):
         meet = self.client.post('/api/v1/meetups', data=json.dumps(self.meetup),
                                 content_type='application/json')
         self.assertEqual(meet.status_code, 201)
 
-    def test_all_meetups_fetch(self):
+    def test_getall_meetups(self):
         all_meetups = self.client.get("api/v1/meetups")
 
         result = json.loads(all_meetups.data.decode())
         self.assertEqual(result["message"], "Success")
         self.assertEqual(all_meetups.status_code, 200)
 
-    def test_fetch_one_meetup(self):
+    def test_getone_meetup(self):
         """ tests fetching of one meetup endpoint """
         # post a meetup
         one_meetup = self.client.post(
