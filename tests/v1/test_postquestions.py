@@ -24,10 +24,11 @@ class TestQuestions(unittest.TestCase):
     def test_post_question(self):
         question = self.client.post(
             'api/v1/questions', data=json.dumps(self.question), content_type='application/json')
-
+        question_data = json.loads(question.data.decode())
+        self.assertIn("Question added successfully", str(question_data))
         self.assertEqual(question.status_code, 201)
 
-    def test_all_questions_fetch(self):
+    def test_getall_questions(self):
         all_questions = self.client.get("api/v1/questions")
 
         result = json.loads(all_questions.data.decode())
@@ -48,23 +49,25 @@ class TestQuestions(unittest.TestCase):
         """ tests when question id does not exist """
         response = self.client.get("api/v1/questions/6")
         res = json.loads(response.data.decode())
-        self.assertEqual(res["message"], "question not found")
+        self.assertIn(res["message"], "question not found")
         self.assertEqual(response.status_code, 404)
 
-    def test_upvote(self):
+    def test_upvote_question(self):
         # post one question
         question = self.client.post(
             'api/v1/questions', data=json.dumps(self.question), content_type='application/json')
         upvote = self.client.patch('/api/v1/questions/1/upvote',
                                    data=json.dumps(self.question), content_type='application/json')
-
+        upvote_data = json.loads(upvote.data.decode())
+        self.assertIn("upvote successfull", str(upvote_data))
         self.assertEqual(upvote.status_code, 201)
 
-    def test_downvote(self):
+    def test_downvote_question(self):
         # post one question
         question = self.client.post(
-            'api/v1/questions', data=json.dumps(self.question), content_type='application/json')
+            'api/v1/questions',  data=json.dumps(self.question), content_type='application/json')
         downvote = self.client.patch('/api/v1/questions/1/downvote',
                                      data=json.dumps(self.question), content_type='application/json')
-
+        downvote_data = json.loads(downvote.data.decode())
+        self.assertIn("downvote successfull", str(downvote_data))
         self.assertEqual(downvote.status_code, 201)

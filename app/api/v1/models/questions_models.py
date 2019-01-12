@@ -1,7 +1,9 @@
+from .basemodels import BaseModels
+
 questions = []
 
 
-class Questions:
+class Questions(BaseModels):
     '''Creates Questions model'''
 
     def __init__(self):
@@ -10,12 +12,12 @@ class Questions:
 
     def post_question(self, postedBy, meetup_id, title, content):
         new_question = {
-            "question_id": len(questions)+1,
+            "question_id": len(questions) + 1,
             "postedBy": postedBy,
             "meetup_id": meetup_id,
             "title": title,
             "content": content,
-            "votes": self.votes
+            "votes": 0
         }
 
         self.db.append(new_question)
@@ -25,15 +27,16 @@ class Questions:
         return self.db
 
     def getone_question(self, question_id):
-        question = [
-            question for question in questions if question['question_id'] == question_id]
+        question = self.check_item(question_id, "question_id", questions)
         return question
+        # question = [
+        #     question for question in questions if question['question_id'] == question_id]
+        # return question
 
     def upvote_question(self, question_id):
         """ method to upvote question """
 
-        question = [
-            question for question in self.db if question['question_id'] == question_id]
+        question = self.check_item(question_id, "question_id", questions)
         if question:
             upvote = {
                 "postedBy": question[0]["postedBy"],
@@ -48,8 +51,7 @@ class Questions:
     def downvote_question(self, question_id):
         """ method to downvote question """
 
-        question = [
-            question for question in self.db if question["question_id"] == question_id]
+        question = self.check_item(question_id, "question_id", questions)
         if question:
             downvote = {
                 "postedBy": question[0]["postedBy"],
