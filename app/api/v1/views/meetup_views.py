@@ -1,7 +1,7 @@
 from flask import jsonify, Blueprint, request, json, make_response
 from ..models.meetups_models import Meetup
 from datetime import datetime
-from uuid import uuid4
+
 
 v1_meetup_blueprint = Blueprint('meetups', __name__, url_prefix='/api/v1')
 
