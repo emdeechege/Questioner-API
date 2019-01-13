@@ -1,5 +1,6 @@
-from datetime import datetime, timedelta
 import jwt
+import os
+from datetime import datetime, timedelta
 from instance.config import Config
 
 users = []
@@ -35,7 +36,7 @@ class Users():
     def signup(self, firstname, lastname, othername, email, phoneNumber, username, isAdmin, password):
         registered = datetime.now()
         new_user = {
-            "id": len(self.db) + 1,
+            "user_id": len(users) + 1,
             "firstname": firstname,
             "lastname": lastname,
             "othername": othername,
@@ -48,4 +49,4 @@ class Users():
         }
 
         self.db.append(new_user)
-        return self.db
+        return new_user, {"message": "User was created successfully"}
