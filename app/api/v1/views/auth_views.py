@@ -62,7 +62,17 @@ def signup():
     password = generate_password_hash(
         password, method='pbkdf2:sha256', salt_length=8)
 
-    user = jsonify(users.signup(
-        firstname, lastname, othername, email, phoneNumber, username, isAdmin, password))
-    user.status_code = 201
-    return user
+    user = users.signup(
+        firstname, lastname, othername, email, phoneNumber, username, isAdmin, password)
+    return make_response(jsonify({
+        "status": 201,
+        "data": [{
+            "firstname": firstname,
+            "lastname": lastname,
+            "othername": othername,
+            "email": email,
+            "phoneNumber": phoneNumber,
+            "username": username,
+            "isAdmin": isAdmin,
+        }]
+    })), 201
