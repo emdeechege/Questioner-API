@@ -1,5 +1,4 @@
 import jwt
-import os
 from datetime import datetime, timedelta
 from instance.config import Config
 

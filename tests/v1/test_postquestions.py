@@ -10,8 +10,8 @@ class TestQuestions(unittest.TestCase):
         self.app = create_app()
         self.client = self.app.test_client()
         self.question = {
-            "postedBy": "user_id",
-            "question_id": "question_id",
+            "postedBy": 1,
+            "question_id": 1,
             "title": "Why now?",
             "content": "True or false",
             "votes": 0
@@ -26,6 +26,7 @@ class TestQuestions(unittest.TestCase):
         question_data = json.loads(question.data.decode())
         self.assertIn("Question added successfully", str(question_data))
         self.assertEqual(question.status_code, 201)
+
 
     def test_getall_questions(self):
         all_questions = self.client.get("api/v1/questions")
