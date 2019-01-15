@@ -19,6 +19,9 @@ class TestMeetup(unittest.TestCase):
             "createdOn":  "02 01 2019 5:00pm",
             "tags": ["python", "hackerthon"]
         }
+        self.meetup1 ={
+            "title" : "Python Hackerthon"
+        }
 
         self.rsvp = {
             "user_id": "1",
@@ -34,6 +37,13 @@ class TestMeetup(unittest.TestCase):
         meet_data = json.loads(meet.data.decode())
         self.assertEqual(meet.status_code, 201)
         self.assertIn("Python Hackerthon", str(meet_data))
+
+    # Test empty fields
+    def test_submit_empty_meetup_fields(self):
+        response = self.client.post('api/v1/meetups',data=json.dumps(self.meetup1),content_type="application/json")
+        result = json.loads(response.data)
+        self.assertEqual(result["message"],"Please fill in all the required input fields")
+        self.assertEqual(response.status_code, 400)
 
 
     def test_getall_meetups(self):
@@ -73,6 +83,7 @@ class TestMeetup(unittest.TestCase):
         self.assertIn("RSVP successfull", str(res))
         self.assertEqual(response.status_code, 201)
         self.assertIn("Yes", str(res))
+
 
 
 if __name__ == '__main__':

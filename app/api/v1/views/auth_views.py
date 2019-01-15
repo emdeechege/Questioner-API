@@ -1,8 +1,9 @@
 from flask import jsonify, Blueprint, request, json, make_response
-from ..models.auth_models import Users
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from ..utils.validators import UserValidation
+from ..models.auth_models import Users
+
 
 v1_auth_blueprint = Blueprint('auth', __name__, url_prefix='/api/v1')
 
