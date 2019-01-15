@@ -12,6 +12,7 @@ class Questions(BaseModels):
 
 
     def post_question(self, postedBy, meetup_id, title, content):
+        """generate new question"""
         new_question = {
             "question_id": len(questions) + 1,
             "postedBy": postedBy,
@@ -34,12 +35,14 @@ class Questions(BaseModels):
         return question
 
     def upvotes(self,question_id):
+        """ search question by id and increasse vote by one"""
         for qtn in questions:
             if qtn['question_id'] == question_id:
                 qtn['votes'] = qtn['votes'] +1
                 return qtn
-                
+
     def downvotes(self,question_id):
+        """ search question by id and reduce votes by one"""
         for qtn in questions:
             if qtn['question_id'] == question_id:
                 qtn['votes'] = qtn['votes'] -1

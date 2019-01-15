@@ -34,6 +34,7 @@ class Meetup(BaseModels):
         return self.db
 
     def getone_meetup(self, meetup_id):
+        """method to fetch one meetup"""
         meetup = self.check_item(meetup_id, "meetup_id", meetups)
         return meetup
 

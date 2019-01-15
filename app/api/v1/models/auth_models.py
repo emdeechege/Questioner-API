@@ -52,6 +52,7 @@ class Users():
         return new_user, {"message": "User was created successfully"}
 
     def login(self, username):
+        """logs in a user"""
         user = [user for user in users if user["username"] == username]
         if user:
             return user

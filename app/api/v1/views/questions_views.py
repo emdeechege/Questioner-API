@@ -14,7 +14,7 @@ def post_question():
     data = request.get_json()
     if not data:
         return jsonify({"message": "Data set cannot be empty"})
-    
+
     if not all(field in data for field in ["title", "content"]):
         return jsonify({"status": 400, "message": "Please fill in all the required input fields"}), 400
 
@@ -43,6 +43,7 @@ def getall():
 
 @v1_question_blueprint.route('/questions/<int:question_id>', methods=['GET'])
 def get_one_question(question_id):
+    """ check if question exists"""
     question = questions.getone_question(question_id)
     if question:
         return make_response(jsonify({
@@ -53,6 +54,7 @@ def get_one_question(question_id):
 
 @v1_question_blueprint.route('/questions/<int:question_id>/upvote', methods=['PATCH'])
 def upvotes(question_id):
+    """ verifies question to be upvoted exists"""
     question = questions.getone_question(question_id)
     if question:
         upvote= Questions().upvotes(question_id)
@@ -61,6 +63,7 @@ def upvotes(question_id):
 
 @v1_question_blueprint.route('/questions/<int:question_id>/downvote', methods=['PATCH'])
 def downvotes(question_id):
+    """ verifies question to be downvoted exists"""
     question = questions.getone_question(question_id)
     if question:
         downvote = Questions().downvotes(question_id)
