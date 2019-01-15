@@ -5,8 +5,6 @@ class Config(object):
     """Parent configuration class."""
     DEBUG = False
     SECRET_KEY = os.getenv('SECRET')
-    # """gets the secret key set in the .env file"""
-    # DATABASE_URI = os.getenv('DATABASE_URL')
 
 
 class DevelopmentConfig(Config):
