@@ -47,17 +47,14 @@ class Validation():
             return False
 
 
-    def payload(self, items, keys):
-        items = items.keys()
-        if len(items) == len(keys):
-            for item in items:
-                if item not in keys:
-                    return False
-            return True
-        else:
-            return False
-
     def list_iterator(list):
         for i in list:
             if i is None or not i:
                 return False
+
+
+    def is_whitespace(self, payload):
+        for item in payload:
+            if len(item) > 0:
+                return True
+        return False
