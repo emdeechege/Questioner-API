@@ -12,7 +12,7 @@ validator = UserValidation()
 
 @v1_auth_blueprint.route('/signup', methods=['POST'])
 def signup():
-    '''View that controls creation of new users'''
+    """View that controls creation of new users"""
     try:
         data = request.get_json()
     except:

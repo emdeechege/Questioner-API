@@ -4,7 +4,7 @@ questions = []
 
 
 class Questions(BaseModels):
-    '''Creates Questions model'''
+    """Creates Questions model"""
 
     def __init__(self):
         self.db = questions
@@ -24,9 +24,11 @@ class Questions(BaseModels):
         return new_question, {"message": "Question added successfully"}
 
     def getall_questions(self):
+        """method to return all questions"""
         return self.db
 
     def getone_question(self, question_id):
+        """method to get one question"""
         question = self.check_item(question_id, "question_id", questions)
         return question
 
