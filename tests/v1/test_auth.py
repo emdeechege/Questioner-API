@@ -100,7 +100,7 @@ class TestUser(unittest.TestCase):
             "password": "Ch@mp19?yes"
         }
         self.login1 = {
-            "username": "Kamaz",
+            "username": "Champ",
             "password": "Ch@mp19?yes"
         }
         self.login2 = {
@@ -118,7 +118,6 @@ class TestUser(unittest.TestCase):
 
     def test_user_signup(self):
         """ Test signup user """
-
 
         check = self.client.post(
             "/api/v1/signup", data=json.dumps(self.user), content_type="application/json")
@@ -185,16 +184,48 @@ class TestUser(unittest.TestCase):
 
         return self
 
-        
+    def test_user_login(self):
+        """ Test login user """
 
+        # response = self.client.post(
+        #     "/api/v1/login", data=json.dumps(self.login), content_type="application/json")
+        # result = json.loads(response.data.decode())
+        #
+        # self.assertEqual(response.status_code, 200)
+        # self.assertEqual(result["status"], 200)
+        # self.assertTrue(result["token"])
 
+        response1 = self.client.post(
+            "/api/v1/login", data=json.dumps(self.login1), content_type="application/json")
+        result1 = json.loads(response1.data.decode())
 
+        self.assertEqual(response1.status_code, 404)
+        self.assertEqual(result1["status"], 404)
+        self.assertEqual(result1["message"], "User does not exist")
 
+        response2 = self.client.post(
+            "/api/v1/login", data=json.dumps(self.login2), content_type="application/json")
+        result2 = json.loads(response2.data.decode())
 
+        self.assertEqual(response2.status_code, 400)
+        self.assertEqual(result2["status"], 400)
+        self.assertEqual(result2["message"], "Username is required")
 
+        response3 = self.client.post(
+            "/api/v1/login", data=json.dumps(self.login3), content_type="application/json")
+        result3 = json.loads(response3.data.decode())
 
+        self.assertEqual(response3.status_code, 400)
+        self.assertEqual(result3["status"], 400)
+        self.assertEqual(result3["message"], "Password is required")
 
-
+        # response4 = self.client.post(
+        #     "/api/v1/login", data=json.dumps(self.login4), content_type="application/json")
+        # result4 = json.loads(response4.data.decode())
+        #
+        # self.assertEqual(response4.status_code, 400)
+        # self.assertEqual(result4["status"], 400)
+        # self.assertEqual(result4["message"], "Incorrect password")
 
         if __name__ == "__main__":
             unittest.main()
