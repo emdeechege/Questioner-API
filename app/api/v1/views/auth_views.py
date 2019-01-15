@@ -102,3 +102,44 @@ def signup():
             "isAdmin": isAdmin,
         }]
     }), 201
+
+@v1_auth_blueprint.route('/login', methods=['POST'])
+def login():
+    """ A view to control users login """
+    try:
+        data = request.get_json()
+    except:
+        return make_response(jsonify({
+            "status": 400,
+            "message": "Wrong input"
+        })), 400
+    username = data.get('username')
+    password = data.get('password')
+
+    if not username:
+        return make_response(jsonify({
+            "status": 400,
+            "message": "Username is required"
+        })), 400
+    if not password:
+        return make_response(jsonify({
+            "status": 400,
+            "message": "Password is required"
+        })), 400
+    user = users.login(username)
+    if user:
+        usr = user[0]
+        if check_password_hash(usr["password"], password):
+            auth_token = users.generate_auth_token(username)
+            return make_response(jsonify({
+                "status": 200,
+                "token": auth_token
+            })), 200
+        return make_response(jsonify({
+            "status": 400,
+            "message": "Incorrect password"
+        })), 400
+    return make_response(jsonify({
+        "status": 404,
+        "message": "User does not exist"
+    })), 404
