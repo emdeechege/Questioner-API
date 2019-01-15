@@ -10,6 +10,7 @@ class Questions(BaseModels):
         self.db = questions
         self.votes = 0
 
+
     def post_question(self, postedBy, meetup_id, title, content):
         new_question = {
             "question_id": len(questions) + 1,
@@ -32,32 +33,14 @@ class Questions(BaseModels):
         question = self.check_item(question_id, "question_id", questions)
         return question
 
-    def upvote_question(self, question_id):
-        """ method to upvote question """
-
-        question = self.check_item(question_id, "question_id", questions)
-        if question:
-            upvote = {
-                "postedBy": question[0]["postedBy"],
-                "meetup_id": question[0]["meetup_id"],
-                "title": question[0]["title"],
-                "content": question[0]["content"],
-                "votes": self.votes + 1
-            }
-
-            return upvote, {"message": "upvote successfull"}
-
-    def downvote_question(self, question_id):
-        """ method to downvote question """
-
-        question = self.check_item(question_id, "question_id", questions)
-        if question:
-            downvote = {
-                "postedBy": question[0]["postedBy"],
-                "meetup_id": question[0]["meetup_id"],
-                "title": question[0]["title"],
-                "content": question[0]["content"],
-                "votes": self.votes - 1
-            }
-
-            return downvote, {"message": "downvote successfull"}
+    def upvotes(self,question_id):
+        for qtn in questions:
+            if qtn['question_id'] == question_id:
+                qtn['votes'] = qtn['votes'] +1
+                return qtn
+                
+    def downvotes(self,question_id):
+        for qtn in questions:
+            if qtn['question_id'] == question_id:
+                qtn['votes'] = qtn['votes'] -1
+                return qtn

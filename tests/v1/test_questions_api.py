@@ -10,17 +10,18 @@ class TestQuestions(unittest.TestCase):
         self.app = create_app()
         self.client = self.app.test_client()
         self.question = {
-            "postedBy": 1,
-            "question_id": 1,
             "title": "Why now?",
-            "content": "True or false",
-            "votes": 0
+            "content": "True or false"
+        }
+        self.question1 = {
+            "title": "Why now?"
         }
 
     def tearDown(self):
         del self.question
 
     def test_post_question(self):
+        """ tests for question creation"""
         question = self.client.post(
             'api/v1/questions', data=json.dumps(self.question), content_type='application/json')
         question_data = json.loads(question.data.decode())
@@ -28,8 +29,17 @@ class TestQuestions(unittest.TestCase):
         self.assertIn("Question added successfully", str(question_data))
         self.assertEqual(question.status_code, 201)
 
+    def test_submit_empty_meetup_fields(self):
+        """check for empty fields"""
+        response = self.client.post(
+            'api/v1/questions', data=json.dumps(self.question1), content_type="application/json")
+        result = json.loads(response.data)
+        self.assertEqual(result["message"],
+                         "Please fill in all the required input fields")
+        self.assertEqual(response.status_code, 400)
 
     def test_getall_questions(self):
+        """fetch all questions"""
         all_questions = self.client.get("api/v1/questions")
 
         result = json.loads(all_questions.data.decode())
@@ -37,7 +47,7 @@ class TestQuestions(unittest.TestCase):
         self.assertEqual(all_questions.status_code, 200)
 
     def test_getone_question(self):
-        # post one question
+        """tests fetching one question"""
         question = self.client.post(
             'api/v1/questions', data=json.dumps(self.question), content_type='application/json')
 
@@ -54,20 +64,22 @@ class TestQuestions(unittest.TestCase):
         self.assertIn(res["message"], "question not found")
         self.assertEqual(response.status_code, 404)
 
-    def test_upvote_question(self):
 
-        upvote = self.client.patch('/api/v1/questions/1/upvote',
-                                   data=json.dumps(self.question), content_type='application/json')
-        upvote_data = json.loads(upvote.data.decode())
-        self.assertIn("upvote successfull", str(upvote_data))
-        self.assertEqual(upvote.status_code, 201)
-
-    def test_downvote_question(self):
-        # post one question
+    def test_upvotesvotes(self):
+        """upvote test"""
         question = self.client.post(
-            'api/v1/questions',  data=json.dumps(self.question), content_type='application/json')
-        downvote = self.client.patch('/api/v1/questions/1/downvote',
-                                     data=json.dumps(self.question), content_type='application/json')
-        downvote_data = json.loads(downvote.data.decode())
-        self.assertIn("downvote successfull", str(downvote_data))
-        self.assertEqual(downvote.status_code, 201)
+            'api/v1/questions', data=json.dumps(self.question), content_type='application/json')
+
+        response = self.client.get("api/v1/questions/1")
+        response = self.client.patch('api/v1/questions/1/upvote')
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_downvotes(self):
+        """downvote tests"""
+        question = self.client.post(
+            'api/v1/questions', data=json.dumps(self.question), content_type='application/json')
+
+        response = self.client.get("api/v1/questions/1")
+        response = self.client.patch('api/v1/questions/1/downvote')
+        self.assertEqual(response.status_code, 200)
