@@ -33,6 +33,7 @@ class Users():
             return 'Invalid token, login'
 
     def signup(self, firstname, lastname, othername, email, phoneNumber, username, isAdmin, password):
+        """collects and creates signup details"""
         registered = datetime.now()
         new_user = {
             "user_id": len(users) + 1,
@@ -51,6 +52,7 @@ class Users():
         return new_user, {"message": "User was created successfully"}
 
     def login(self, username):
+        """logs in a user"""
         user = [user for user in users if user["username"] == username]
         if user:
             return user

@@ -1,8 +1,9 @@
 from flask import jsonify, Blueprint, request, json, make_response
-from ..models.auth_models import Users
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from ..utils.validators import UserValidation
+from ..models.auth_models import Users
+
 
 v1_auth_blueprint = Blueprint('auth', __name__, url_prefix='/api/v1')
 
@@ -12,7 +13,7 @@ validator = UserValidation()
 
 @v1_auth_blueprint.route('/signup', methods=['POST'])
 def signup():
-    '''View that controls creation of new users'''
+    """View that controls creation of new users"""
     try:
         data = request.get_json()
     except:

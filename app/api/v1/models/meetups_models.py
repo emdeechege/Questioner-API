@@ -30,9 +30,11 @@ class Meetup(BaseModels):
         return new_meetup, {"message": "meetup was created successfully"}
 
     def getall_meetups(self):
+        """method to get all meetups"""
         return self.db
 
     def getone_meetup(self, meetup_id):
+        """method to fetch one meetup"""
         meetup = self.check_item(meetup_id, "meetup_id", meetups)
         return meetup
 

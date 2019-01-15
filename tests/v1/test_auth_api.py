@@ -126,6 +126,8 @@ class TestUser(unittest.TestCase):
         self.assertEqual(check.status_code, 201)
         self.assertEqual(result["status"], 201)
 
+    def test_phone_number(self):
+
         check7 = self.client.post(
             "/api/v1/signup", data=json.dumps(self.user7), content_type="application/json")
         result7 = json.loads(check7.data.decode())
@@ -134,6 +136,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(result7["status"], 400)
         self.assertEqual(result7["message"], "Phonenumber is required")
 
+    def test_password(self):
         check1 = self.client.post(
             "/api/v1/signup", data=json.dumps(self.user1), content_type="application/json")
         result1 = json.loads(check1.data.decode())
@@ -141,6 +144,8 @@ class TestUser(unittest.TestCase):
         self.assertEqual(check1.status_code, 400)
         self.assertEqual(result1["status"], 400)
         self.assertEqual(result1["message"], "Password not valid")
+
+    def test_invalid_email(self):
 
         check2 = self.client.post(
             "/api/v1/signup", data=json.dumps(self.user2), content_type="application/json")
@@ -150,6 +155,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(result2["status"], 400)
         self.assertEqual(result2["message"], "Invalid email")
 
+    def test_firstname(self):
         check3 = self.client.post(
             "/api/v1/signup", data=json.dumps(self.user3), content_type="application/json")
         result3 = json.loads(check3.data.decode())
@@ -158,6 +164,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(result3["status"], 400)
         self.assertEqual(result3["message"], "Firstname is required")
 
+    def test_lastname(self):
         check4 = self.client.post(
             "/api/v1/signup", data=json.dumps(self.user4), content_type="application/json")
         result4 = json.loads(check4.data.decode())
@@ -166,6 +173,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(result4["status"], 400)
         self.assertEqual(result4["message"], "Lastname is required")
 
+    def test_Email_required(self):
         check5 = self.client.post(
             "/api/v1/signup", data=json.dumps(self.user5), content_type="application/json")
         result5 = json.loads(check5.data.decode())
@@ -174,6 +182,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(result5["status"], 400)
         self.assertEqual(result5["message"], "Email is required")
 
+    def test_Password_required(self):
         check6 = self.client.post(
             "/api/v1/signup", data=json.dumps(self.user6), content_type="application/json")
         result6 = json.loads(check6.data.decode())
@@ -187,14 +196,8 @@ class TestUser(unittest.TestCase):
     def test_user_login(self):
         """ Test login user """
 
-        # response = self.client.post(
-        #     "/api/v1/login", data=json.dumps(self.login), content_type="application/json")
-        # result = json.loads(response.data.decode())
-        #
-        # self.assertEqual(response.status_code, 200)
-        # self.assertEqual(result["status"], 200)
-        # self.assertTrue(result["token"])
-
+        pass
+    def test_user_exists(self):
         response1 = self.client.post(
             "/api/v1/login", data=json.dumps(self.login1), content_type="application/json")
         result1 = json.loads(response1.data.decode())
@@ -203,6 +206,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(result1["status"], 404)
         self.assertEqual(result1["message"], "User does not exist")
 
+    def test_username_required(self):
         response2 = self.client.post(
             "/api/v1/login", data=json.dumps(self.login2), content_type="application/json")
         result2 = json.loads(response2.data.decode())
@@ -210,6 +214,8 @@ class TestUser(unittest.TestCase):
         self.assertEqual(response2.status_code, 400)
         self.assertEqual(result2["status"], 400)
         self.assertEqual(result2["message"], "Username is required")
+
+    def test_Password_required(self):
 
         response3 = self.client.post(
             "/api/v1/login", data=json.dumps(self.login3), content_type="application/json")
@@ -219,13 +225,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(result3["status"], 400)
         self.assertEqual(result3["message"], "Password is required")
 
-        # response4 = self.client.post(
-        #     "/api/v1/login", data=json.dumps(self.login4), content_type="application/json")
-        # result4 = json.loads(response4.data.decode())
-        #
-        # self.assertEqual(response4.status_code, 400)
-        # self.assertEqual(result4["status"], 400)
-        # self.assertEqual(result4["message"], "Incorrect password")
+
 
         if __name__ == "__main__":
             unittest.main()

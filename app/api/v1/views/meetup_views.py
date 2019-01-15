@@ -1,6 +1,7 @@
 from flask import jsonify, Blueprint, request, json, make_response
-from ..models.meetups_models import Meetup
 from datetime import datetime
+from ..models.meetups_models import Meetup
+
 
 
 v1_meetup_blueprint = Blueprint('meetups', __name__, url_prefix='/api/v1')
@@ -15,6 +16,11 @@ def create_meetup():
     data = request.get_json()
     if not data:
         return jsonify({"message": "Data set cannot be empty"})
+    """ Check for empty inputs"""
+    if not all(field in data for field in ["title", "organizer", "images", "location", "happeningOn", "tags"]):
+        return jsonify({"status": 400, "message": "Please fill in all the required input fields"}), 400
+    """Check for data type"""
+
 
     title = data.get('title')
     createdOn = data.get('time')
@@ -43,7 +49,7 @@ def getall():
 
 @v1_meetup_blueprint.route('/meetups/<int:meetup_id>', methods=['GET'])
 def get_one_meetup(meetup_id):
-    '''querry meetups by id'''
+    """querry meetups by id"""
     meetup = meetups.getone_meetup(meetup_id)
     if meetup:
         return make_response(jsonify({

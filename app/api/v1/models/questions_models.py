@@ -4,13 +4,15 @@ questions = []
 
 
 class Questions(BaseModels):
-    '''Creates Questions model'''
+    """Creates Questions model"""
 
     def __init__(self):
         self.db = questions
         self.votes = 0
 
+
     def post_question(self, postedBy, meetup_id, title, content):
+        """generate new question"""
         new_question = {
             "question_id": len(questions) + 1,
             "postedBy": postedBy,
@@ -24,38 +26,24 @@ class Questions(BaseModels):
         return new_question, {"message": "Question added successfully"}
 
     def getall_questions(self):
+        """method to return all questions"""
         return self.db
 
     def getone_question(self, question_id):
+        """method to get one question"""
         question = self.check_item(question_id, "question_id", questions)
         return question
 
-    def upvote_question(self, question_id):
-        """ method to upvote question """
+    def upvotes(self,question_id):
+        """ search question by id and increasse vote by one"""
+        for qtn in questions:
+            if qtn['question_id'] == question_id:
+                qtn['votes'] = qtn['votes'] +1
+                return qtn
 
-        question = self.check_item(question_id, "question_id", questions)
-        if question:
-            upvote = {
-                "postedBy": question[0]["postedBy"],
-                "meetup_id": question[0]["meetup_id"],
-                "title": question[0]["title"],
-                "content": question[0]["content"],
-                "votes": self.votes + 1
-            }
-
-            return upvote, {"message": "upvote successfull"}
-
-    def downvote_question(self, question_id):
-        """ method to downvote question """
-
-        question = self.check_item(question_id, "question_id", questions)
-        if question:
-            downvote = {
-                "postedBy": question[0]["postedBy"],
-                "meetup_id": question[0]["meetup_id"],
-                "title": question[0]["title"],
-                "content": question[0]["content"],
-                "votes": self.votes - 1
-            }
-
-            return downvote, {"message": "downvote successfull"}
+    def downvotes(self,question_id):
+        """ search question by id and reduce votes by one"""
+        for qtn in questions:
+            if qtn['question_id'] == question_id:
+                qtn['votes'] = qtn['votes'] -1
+                return qtn
