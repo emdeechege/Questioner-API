@@ -6,14 +6,19 @@ from app.api.v1.models.auth_models import users
 class Validation():
     def validate_email(self, email):
         """checks the format of email is standard"""
-        exp = "^[\w]+[\d]?@[\w]+\.[\w]+$"
-        return re.match(exp, email)
+        expects = "^[\w]+[\d]?@[\w]+\.[\w]+$"
+        return re.match(expects, email)
 
 
     def validate_password(self, password):
         """check that password contains numbers, special characters and letters. Len >6"""
-        exp = "^[a-zA-Z0-9@_+-.]{3,}$"
-        return re.match(exp, password)
+        expects = "r'(?=(.*[0-9]))((?=.*[A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[$#@]))^.{6,12}$'"
+        return re.match(expects, password)
+
+    def validate_phoneNumber(self, phoneNumber):
+        """ check that phone number is digit """
+        phone = "^[0-9]+$"
+        return re.match(phone, phoneNumber)
 
     def username_exists(self, username):
         """ verifies user existence in db"""

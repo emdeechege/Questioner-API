@@ -31,11 +31,18 @@ def signup():
     isAdmin = data.get('isAdmin')
     password = data.get('password')
 
-    payload = firstname, lastname, othername, email, phoneNumber, username, isAdmin, password
+
     """ Check for empty inputs"""
     if not all(field in data for field in ["firstname", "othername", "email", "phoneNumber", "username", "isAdmin", "password"]):
-        return jsonify({"status": 400, "message": "Please fill in all the required input fields"}), 400
+        return jsonify({
+        "status": 400,
+        "message": "Please fill in all the required input fields"}), 400
 
+    if not validator.validate_phoneNumber(phoneNumber):
+        return jsonify({
+        "status": 400,
+        "message": "Please input valid phone number"
+        }), 400
 
     if validator.validate_password(password):
         return jsonify({
@@ -102,20 +109,26 @@ def login():
             "status": 400,
             "message": "Password is required"
         })), 400
+
+    if  not validator.username_exists(username):
+        return jsonify({
+            "status": 404,
+            "message": "User does not exist"
+        }), 404
+
+
     user = users.login(username)
+
     if user:
         usr = user[0]
         if check_password_hash(usr["password"], password):
             auth_token = users.generate_auth_token(username)
             return make_response(jsonify({
                 "status": 200,
+                "message": 'Logged in successfuly',
                 "token": auth_token
             })), 200
-        return make_response(jsonify({
+    return make_response(jsonify({
             "status": 400,
             "message": "Incorrect password"
         })), 400
-    return make_response(jsonify({
-        "status": 404,
-        "message": "User does not exist"
-    })), 404

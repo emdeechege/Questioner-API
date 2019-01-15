@@ -71,6 +71,7 @@ class TestUser(unittest.TestCase):
         """ Test login user """
         pass
 
+
     def test_user_exists(self):
         response1 = self.client.post(
             "/api/v1/login", data=json.dumps(self.login1), content_type="application/json")
