@@ -3,7 +3,6 @@ from datetime import datetime
 from ..models.meetups_models import Meetup
 
 
-
 v1_meetup_blueprint = Blueprint('meetups', __name__, url_prefix='/api/v1')
 
 meetups = Meetup()
@@ -20,7 +19,6 @@ def create_meetup():
     if not all(field in data for field in ["title", "organizer", "images", "location", "happeningOn", "tags"]):
         return jsonify({"status": 400, "message": "Please fill in all the required input fields"}), 400
     """Check for data type"""
-
 
     title = data.get('title')
     createdOn = data.get('time')
@@ -41,10 +39,12 @@ def getall():
     """ endpoint to fetch all meetups """
 
     data = meetups.getall_meetups()
-    return make_response(jsonify({
-        "message": "Success",
-        "meetups": data
-    }), 200)
+    if data:
+        return make_response(jsonify({
+            "message": "Success",
+            "meetups": data
+        }), 200)
+    return make_response(jsonify({'message': 'meetup not found'}), 404)
 
 
 @v1_meetup_blueprint.route('/meetups/<int:meetup_id>', methods=['GET'])

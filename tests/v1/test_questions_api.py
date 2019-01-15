@@ -73,7 +73,17 @@ class TestQuestions(unittest.TestCase):
 
         response = self.client.get("api/v1/questions/1")
         response = self.client.patch('api/v1/questions/1/upvote')
+        res = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
+        self.assertIn(res["message"], "Question upvoted")
+
+    def test_upvotesvotes_no_questions(self):
+        """upvote test"""
+        response = self.client.get("api/v1/questions/5")
+        response = self.client.patch('api/v1/questions/5/upvote')
+        res = json.loads(response.data.decode())
+        self.assertIn(res["message"], "question not found")
+        self.assertEqual(response.status_code, 404)
 
 
     def test_downvotes(self):
@@ -83,4 +93,14 @@ class TestQuestions(unittest.TestCase):
 
         response = self.client.get("api/v1/questions/1")
         response = self.client.patch('api/v1/questions/1/downvote')
+        res = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
+        self.assertIn(res["message"], "Question downvoted")
+
+    def test_downvotesvotes_no_questions(self):
+        """downvote test"""
+        response = self.client.get("api/v1/questions/5")
+        response = self.client.patch('api/v1/questions/5/downvote')
+        res = json.loads(response.data.decode())
+        self.assertIn(res["message"], "question not found")
+        self.assertEqual(response.status_code, 404)

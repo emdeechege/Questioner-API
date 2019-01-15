@@ -24,9 +24,48 @@ class TestUser(unittest.TestCase):
             "username": "Kijana",
             "password": "Ch@mp19?yes"
         }
+        self.user4 = {
+            "firstname": "Hunter",
+            "lastname": "Tar",
+            "othername": "Blur",
+            "email": "cham@gmail.com",
+            "phoneNumber": "1234756789",
+            "isAdmin": "False",
+            "username": "Kiboss",
+            "password": "Ch@mp19?no"
+        }
         self.user1 = {
+            "firstname": "Angry"
+        }
+        self.user2 = {
             "firstname": "Angry",
-
+            "lastname": "Stars",
+            "othername": "Birds",
+            "email": "cham@gmail.com",
+            "phoneNumber": "12345wedr",
+            "isAdmin": "True",
+            "username": "Kijana",
+            "password": "Ch@mp19?yes"
+        }
+        self.user3 = {
+            "firstname": "Truthy",
+            "lastname": "Stoway",
+            "othername": "Birth",
+            "email": "chamergmail.com",
+            "phoneNumber": "1234534",
+            "isAdmin": "True",
+            "username": "Kijanadf",
+            "password": "Ch@mp19?yes"
+        }
+        self.user6 = {
+            "firstname": "    ",
+            "lastname": "Stoway",
+            "othername": "Birth",
+            "email": "chamer@gmail.com",
+            "phoneNumber": "1234534",
+            "isAdmin": "True",
+            "username": "Kijanadf",
+            "password": "Ch@mp19?yes"
         }
         self.login = {
             "username": "Kijana",
@@ -58,6 +97,7 @@ class TestUser(unittest.TestCase):
 
         self.assertEqual(check.status_code, 201)
         self.assertEqual(result["status"], 201)
+        self.assertIn("Kijana", str(result))
 
     def test_submit_empty_signup_fields(self):
         response = self.client.post(
@@ -67,10 +107,40 @@ class TestUser(unittest.TestCase):
                          "Please fill in all the required input fields")
         self.assertEqual(response.status_code, 400)
 
+    def test_is_whitespace(self):
+        response = self.client.post(
+            '/api/v1/signup', data=json.dumps(self.user6), content_type="application/json")
+        result = json.loads(response.data)
+        self.assertEqual(result["message"], "Data cannot contain white spaces only")
+        self.assertEqual(response.status_code, 400)
+
+    def test_validate_phoneNumber(self):
+        response = self.client.post(
+            '/api/v1/signup', data=json.dumps(self.user2), content_type="application/json")
+        result = json.loads(response.data)
+        self.assertTrue(result["message"],
+                        "Please input valid phone number")
+        self.assertTrue(response.status_code, 400)
+
+    def test_validate_email(self):
+        response = self.client.post(
+            '/api/v1/signup', data=json.dumps(self.user3), content_type="application/json")
+        result = json.loads(response.data)
+        self.assertEqual(result["message"],
+                         "Invalid email")
+        self.assertEqual(response.status_code, 400)
+
+    def test_username_exists(self):
+        response = self.client.post(
+            '/api/v1/signup', data=json.dumps(self.user), content_type="application/json")
+        result = json.loads(response.data)
+        self.assertEqual(result["message"],
+                         "Username exists")
+        self.assertEqual(response.status_code, 400)
+
     def test_user_login(self):
         """ Test login user """
         pass
-
 
     def test_user_exists(self):
         response1 = self.client.post(
@@ -99,8 +169,6 @@ class TestUser(unittest.TestCase):
         self.assertEqual(response3.status_code, 400)
         self.assertEqual(result3["status"], 400)
         self.assertEqual(result3["message"], "Password is required")
-
-
 
         if __name__ == "__main__":
             unittest.main()

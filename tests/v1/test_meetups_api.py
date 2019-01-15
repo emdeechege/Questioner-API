@@ -1,6 +1,7 @@
 import unittest
-from app import create_app
 import json
+from app import create_app
+
 
 
 class TestMeetup(unittest.TestCase):
@@ -28,6 +29,8 @@ class TestMeetup(unittest.TestCase):
             "response": "Yes"
         }
 
+        self.no ={}
+
     def tearDown(self):
         del self.meetup
 
@@ -53,6 +56,7 @@ class TestMeetup(unittest.TestCase):
         self.assertEqual(result["message"], "Success")
         self.assertEqual(all_meetups.status_code, 200)
 
+
     def test_getone_meetup(self):
         """ tests fetching of one meetup endpoint """
 
@@ -61,7 +65,7 @@ class TestMeetup(unittest.TestCase):
         one_meetup_data = json.loads(one_meetup.data.decode())
         self.assertIn("meetup was created successfully", str(one_meetup_data))
         self.assertEqual(one_meetup.status_code, 201)
-        
+
         response = self.client.get("api/v1/meetups/1")
         res = json.loads(response.data.decode())
         self.assertEqual(res["message"], "Success")
@@ -83,6 +87,14 @@ class TestMeetup(unittest.TestCase):
         self.assertIn("RSVP successfull", str(res))
         self.assertEqual(response.status_code, 201)
         self.assertIn("Yes", str(res))
+
+    def test_rsvp_no_meetup(self):
+        """test for rsvp"""
+        response = self.client.post("api/v1/meetups/6/rsvp",
+                                    data=json.dumps(self.rsvp), content_type='application/json')
+        res = json.loads(response.data.decode())
+        self.assertEqual(res["message"], "meetup not found")
+        self.assertEqual(response.status_code, 404)
 
 
 
