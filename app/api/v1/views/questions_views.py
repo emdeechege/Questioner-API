@@ -14,7 +14,7 @@ def post_question():
     data = request.get_json()
     if not data:
         return jsonify({"message": "Data set cannot be empty"})
-    # Check for empty inputs
+    
     if not all(field in data for field in ["title", "content"]):
         return jsonify({"status": 400, "message": "Please fill in all the required input fields"}), 400
 
