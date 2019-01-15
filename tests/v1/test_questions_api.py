@@ -4,7 +4,7 @@ import json
 
 
 class TestQuestions(unittest.TestCase):
-    '''Test Question class'''
+    """Test Question class"""
 
     def setUp(self):
         self.app = create_app()
@@ -24,6 +24,7 @@ class TestQuestions(unittest.TestCase):
         question = self.client.post(
             'api/v1/questions', data=json.dumps(self.question), content_type='application/json')
         question_data = json.loads(question.data.decode())
+        self.assertIn("Why now?", str(question_data))
         self.assertIn("Question added successfully", str(question_data))
         self.assertEqual(question.status_code, 201)
 
@@ -42,6 +43,7 @@ class TestQuestions(unittest.TestCase):
 
         response = self.client.get("api/v1/questions/1")
         res = json.loads(response.data.decode())
+        self.assertIn("Why now?", str(res))
         self.assertEqual(res["message"], "Success")
         self.assertEqual(response.status_code, 200)
 

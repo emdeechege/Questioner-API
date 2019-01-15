@@ -43,7 +43,7 @@ def getall():
 
 @v1_meetup_blueprint.route('/meetups/<int:meetup_id>', methods=['GET'])
 def get_one_meetup(meetup_id):
-    '''querry meetups by id'''
+    """querry meetups by id"""
     meetup = meetups.getone_meetup(meetup_id)
     if meetup:
         return make_response(jsonify({
