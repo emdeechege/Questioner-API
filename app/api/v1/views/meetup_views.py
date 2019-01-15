@@ -63,10 +63,13 @@ def rsvp_meetup(meetup_id):
     """ endpoint for rsvp meetup """
     data = request.get_json()
 
-    user_id = data.get('user_id')
-    meetup_id = meetup_id
-    response = data.get('response')
+    meetup = meetups.getone_meetup(meetup_id)
+    if meetup:
+        user_id = data.get('user_id')
+        meetup_id = meetup_id
+        response = data.get('response')
 
-    res = jsonify(meetups.post_rsvp(user_id, meetup_id, response))
-    res.status_code = 201
-    return res
+        res = jsonify(meetups.post_rsvp(user_id, meetup_id, response))
+        res.status_code = 201
+        return res
+    return make_response(jsonify({'message': 'meetup not found'}), 404)

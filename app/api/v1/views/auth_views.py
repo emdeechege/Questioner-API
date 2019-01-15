@@ -1,14 +1,14 @@
 from flask import jsonify, Blueprint, request, json, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from ..utils.validators import UserValidation
+from ..utils.validators import Validation
 from ..models.auth_models import Users
 
 
 v1_auth_blueprint = Blueprint('auth', __name__, url_prefix='/api/v1')
 
 users = Users()
-validator = UserValidation()
+validator = Validation()
 
 
 @v1_auth_blueprint.route('/signup', methods=['POST'])
@@ -31,36 +31,11 @@ def signup():
     isAdmin = data.get('isAdmin')
     password = data.get('password')
 
-    if not firstname:
-        return jsonify({
-            "status": 400,
-            "message": "Firstname is required"
-        }), 400
-    if not lastname:
-        return jsonify({
-            "status": 400,
-            "message": "Lastname is required"
-        }), 400
-    if not email:
-        return jsonify({
-            "status": 400,
-            "message": "Email is required"
-        }), 400
-    if not phoneNumber:
-        return jsonify({
-            "status": 400,
-            "message": "Phonenumber is required"
-        }), 400
-    if not username:
-        return jsonify({
-            "status": 400,
-            "message": "Username is required"
-        }), 400
-    if not password:
-        return jsonify({
-            "status": 400,
-            "message": "Password is required"
-        }), 400
+    payload = firstname, lastname, othername, email, phoneNumber, username, isAdmin, password
+    """ Check for empty inputs"""
+    if not all(field in data for field in ["firstname", "othername", "email", "phoneNumber", "username", "isAdmin", "password"]):
+        return jsonify({"status": 400, "message": "Please fill in all the required input fields"}), 400
+
 
     if validator.validate_password(password):
         return jsonify({
