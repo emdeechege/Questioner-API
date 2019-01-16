@@ -118,7 +118,7 @@ def login():
 
     auth_token = user.generate_auth_token(username)
     return make_response(jsonify({
-            "status": 200,
-            "message": 'Logged in successfuly',
-            "token": auth_token
-        })), 200
+        "status": 200,
+        "message": 'Logged in successfuly',
+        "token": auth_token
+    })), 200

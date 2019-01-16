@@ -1,4 +1,4 @@
-from flask import jsonify, Blueprint, request, json, make_response
+from flask import jsonify, Blueprint, request, make_response
 from ..models.questions_models import Questions
 from ..models.meetups_models import Meetup
 
@@ -6,7 +6,7 @@ from ..models.meetups_models import Meetup
 v1_question_blueprint = Blueprint('questions', __name__, url_prefix='/api/v1')
 
 questions = Questions()
-meetups=Meetup()
+meetups = Meetup()
 
 
 @v1_question_blueprint.route('/questions', methods=['POST'])
@@ -59,7 +59,7 @@ def upvotes(question_id):
     question = questions.getone_question(question_id)
     if question:
         upvote = Questions().upvotes(question_id)
-        return jsonify({"status": 201, 'message': 'Question upvoted'})
+        return jsonify({"status": 201, "data": upvote, 'message': 'Question upvoted'})
     return make_response(jsonify({'message': 'question not found'}), 404)
 
 

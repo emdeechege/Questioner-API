@@ -29,16 +29,6 @@ class Validation():
         else:
             return False
 
-    def same_password(self, username, password):
-        """ verifies passwords match on login"""
-        exists = [user for user in users_list if user['username'] == username]
-        if exists:
-            validate = check_password_hash(exists['password'], password)
-            if validate:
-                return True
-            else:
-                return False
-
     def email_exists(self, email):
         """ check if emails exist"""
         exists = [user for user in users_list if user['email'] == email]
@@ -48,6 +38,7 @@ class Validation():
             return False
 
     def is_whitespace(self, payload):
+        """ check for white spaces"""
         for item in payload:
             if len(item) == 0:
                 return True
