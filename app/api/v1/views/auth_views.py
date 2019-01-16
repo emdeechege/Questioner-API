@@ -116,18 +116,9 @@ def login():
             "message": "User does not exist"
         }), 404
 
-    current_user = user.login(username)
-
-    if current_user:
-        usr = current_user[0]
-        if validator.same_password(usr["password"], password):
-            auth_token = user.generate_auth_token(username)
-            return make_response(jsonify({
-                "status": 200,
-                "message": 'Logged in successfuly',
-                "token": auth_token
-            })), 200
+    auth_token = user.generate_auth_token(username)
     return make_response(jsonify({
-        "status": 400,
-        "message": "Incorrect password"
-    })), 400
+            "status": 200,
+            "message": 'Logged in successfuly',
+            "token": auth_token
+        })), 200

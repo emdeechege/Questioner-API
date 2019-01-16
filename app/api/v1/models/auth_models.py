@@ -53,10 +53,13 @@ class Users(BaseModels):
         self.save_data(new)
         return new, {"message": "User was created successfully"}
 
-
-    def login(self, username):
+    def login(self, username, password):
         """logs in a user"""
         data = self.search_username("username", username)
         if data:
-            return jsonify({"message": "successfully signed-in as {}".format(username)}), 200
-        return jsonify({"message": "invalid username or password"}), 403
+            if data["password"] == password:
+                return jsonify({"message": "successfully signed-in as {}".format(username)}), 200
+            return jsonify({"message": "invalid username or password"}), 403
+        return jsonify({"message": "user {} was not found".format(username)}), 404
+
+    
