@@ -1,14 +1,14 @@
 from flask import jsonify, Blueprint, request, json, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from ..utils.validators import UserValidation
+from ..utils.validators import Validation
 from ..models.auth_models import Users
 
 
 v1_auth_blueprint = Blueprint('auth', __name__, url_prefix='/api/v1')
 
-users = Users()
-validator = UserValidation()
+user = Users()
+validator = Validation()
 
 
 @v1_auth_blueprint.route('/signup', methods=['POST'])
@@ -31,35 +31,42 @@ def signup():
     isAdmin = data.get('isAdmin')
     password = data.get('password')
 
-    if not firstname:
-        return jsonify({
+    """ Check for empty inputs"""
+    if not firstname or not firstname.split():
+        return make_response(jsonify({
             "status": 400,
             "message": "Firstname is required"
-        }), 400
-    if not lastname:
-        return jsonify({
+        })), 400
+    if not lastname or not lastname.split():
+        return make_response(jsonify({
             "status": 400,
             "message": "Lastname is required"
-        }), 400
-    if not email:
-        return jsonify({
+        })), 400
+    if not email or not email.split():
+        return make_response(jsonify({
             "status": 400,
             "message": "Email is required"
-        }), 400
-    if not phoneNumber:
-        return jsonify({
+        })), 400
+    if not phoneNumber or not phoneNumber.split():
+        return make_response(jsonify({
             "status": 400,
             "message": "Phonenumber is required"
-        }), 400
-    if not username:
-        return jsonify({
+        })), 400
+    if not username or not username.split():
+        return make_response(jsonify({
             "status": 400,
             "message": "Username is required"
-        }), 400
-    if not password:
-        return jsonify({
+        })), 400
+    if not password or not password.split():
+        return make_response(jsonify({
             "status": 400,
             "message": "Password is required"
+        })), 400
+
+    if not validator.validate_phoneNumber(phoneNumber):
+        return jsonify({
+            "status": 400,
+            "message": "Please input valid phone number"
         }), 400
 
     if validator.validate_password(password):
@@ -89,7 +96,7 @@ def signup():
     password = generate_password_hash(
         password, method='pbkdf2:sha256', salt_length=8)
 
-    user = users.signup(
+    res = user.signup(
         firstname, lastname, othername, email, phoneNumber, username, isAdmin, password)
     return jsonify({
         "status": 201,
@@ -100,9 +107,10 @@ def signup():
             "email": email,
             "phoneNumber": phoneNumber,
             "username": username,
-            "isAdmin": isAdmin,
+            "isAdmin": isAdmin
         }]
     }), 201
+
 
 @v1_auth_blueprint.route('/login', methods=['POST'])
 def login():
@@ -127,20 +135,16 @@ def login():
             "status": 400,
             "message": "Password is required"
         })), 400
-    user = users.login(username)
-    if user:
-        usr = user[0]
-        if check_password_hash(usr["password"], password):
-            auth_token = users.generate_auth_token(username)
-            return make_response(jsonify({
-                "status": 200,
-                "token": auth_token
-            })), 200
-        return make_response(jsonify({
-            "status": 400,
-            "message": "Incorrect password"
-        })), 400
+
+    if not validator.username_exists(username):
+        return jsonify({
+            "status": 404,
+            "message": "User does not exist"
+        }), 404
+
+    auth_token = user.generate_auth_token(username)
     return make_response(jsonify({
-        "status": 404,
-        "message": "User does not exist"
-    })), 404
+        "status": 200,
+        "message": 'Logged in successfuly',
+        "token": auth_token
+    })), 200

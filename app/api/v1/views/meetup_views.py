@@ -1,12 +1,12 @@
 from flask import jsonify, Blueprint, request, json, make_response
 from datetime import datetime
-from ..models.meetups_models import Meetup
-
+from ..models.meetups_models import Meetup, Rsvp
 
 
 v1_meetup_blueprint = Blueprint('meetups', __name__, url_prefix='/api/v1')
 
 meetups = Meetup()
+rsvp = Rsvp()
 
 
 @v1_meetup_blueprint.route('/meetups', methods=['POST'])
@@ -20,7 +20,6 @@ def create_meetup():
     if not all(field in data for field in ["title", "organizer", "images", "location", "happeningOn", "tags"]):
         return jsonify({"status": 400, "message": "Please fill in all the required input fields"}), 400
     """Check for data type"""
-
 
     title = data.get('title')
     createdOn = data.get('time')
@@ -41,10 +40,12 @@ def getall():
     """ endpoint to fetch all meetups """
 
     data = meetups.getall_meetups()
-    return make_response(jsonify({
-        "message": "Success",
-        "meetups": data
-    }), 200)
+    if data:
+        return make_response(jsonify({
+            "message": "Success",
+            "meetups": data
+        }), 200)
+    return make_response(jsonify({'message': 'Meetup not found'}), 404)
 
 
 @v1_meetup_blueprint.route('/meetups/<int:meetup_id>', methods=['GET'])
@@ -53,20 +54,26 @@ def get_one_meetup(meetup_id):
     meetup = meetups.getone_meetup(meetup_id)
     if meetup:
         return make_response(jsonify({
-            'message': 'Success',
-            'meetup': meetup[0]}), 200)
-    return make_response(jsonify({'message': 'meetup not found'}), 404)
+            "message": "Success",
+            "meetup": meetup
+        })), 200
+    return make_response(jsonify({'message': 'Meetup not found'}), 404)
 
 
 @v1_meetup_blueprint.route('/meetups/<int:meetup_id>/rsvp', methods=['POST'])
 def rsvp_meetup(meetup_id):
     """ endpoint for rsvp meetup """
     data = request.get_json()
+    if not data:
+        return jsonify({"message": "Data set cannot be empty"}), 400
 
-    user_id = data.get('user_id')
-    meetup_id = meetup_id
-    response = data.get('response')
+    meetup = meetups.getone_meetup(meetup_id)
+    if meetup:
+        user_id = data.get('user_id')
+        meetup_id = meetup_id
+        response = data.get('response')
 
-    res = jsonify(meetups.post_rsvp(user_id, meetup_id, response))
-    res.status_code = 201
-    return res
+        res = rsvp.post_rsvp(user_id, meetup_id, response)
+        
+        return res
+    return make_response(jsonify({'message': 'Meetup not found'}), 404)

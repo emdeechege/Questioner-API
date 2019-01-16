@@ -1,49 +1,49 @@
-from .basemodels import BaseModels
-
-questions = []
+from flask import jsonify
+from .basemodels import BaseModels, questions_list, meetups_list
 
 
 class Questions(BaseModels):
     """Creates Questions model"""
 
     def __init__(self):
-        self.db = questions
+        self.db = 'questions'
         self.votes = 0
-
 
     def post_question(self, postedBy, meetup_id, title, content):
         """generate new question"""
-        new_question = {
-            "question_id": len(questions) + 1,
+        new = {
+            "question_id": len(questions_list) + 1,
             "postedBy": postedBy,
             "meetup_id": meetup_id,
             "title": title,
             "content": content,
             "votes": 0
         }
-
-        self.db.append(new_question)
-        return new_question, {"message": "Question added successfully"}
+        for record in meetups_list:
+            if record["meetup_id"] == meetup_id:
+                return jsonify({"message": "Meetup does not exist"}), 404
+        self.save_data(new)
+        return jsonify(new, {"message": "Question added successfully"}), 201
 
     def getall_questions(self):
         """method to return all questions"""
-        return self.db
+        return self.check_db()
 
     def getone_question(self, question_id):
         """method to get one question"""
-        question = self.check_item(question_id, "question_id", questions)
+        question = self.search_db("question_id", question_id)
         return question
 
-    def upvotes(self,question_id):
+    def upvotes(self, question_id):
         """ search question by id and increasse vote by one"""
-        for qtn in questions:
-            if qtn['question_id'] == question_id:
-                qtn['votes'] = qtn['votes'] +1
-                return qtn
+        qtn = self.search_db("question_id", question_id)
+        if qtn['question_id'] == question_id:
+            qtn['votes'] = qtn['votes'] + 1
+            return qtn
 
-    def downvotes(self,question_id):
+    def downvotes(self, question_id):
         """ search question by id and reduce votes by one"""
-        for qtn in questions:
-            if qtn['question_id'] == question_id:
-                qtn['votes'] = qtn['votes'] -1
-                return qtn
+        qtn = self.search_db("question_id", question_id)
+        if qtn['question_id'] == question_id:
+            qtn['votes'] = qtn['votes'] - 1
+            return qtn

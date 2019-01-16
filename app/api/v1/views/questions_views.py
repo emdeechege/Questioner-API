@@ -1,10 +1,12 @@
-from flask import jsonify, Blueprint, request, json, make_response
+from flask import jsonify, Blueprint, request, make_response
 from ..models.questions_models import Questions
+from ..models.meetups_models import Meetup
 
 
 v1_question_blueprint = Blueprint('questions', __name__, url_prefix='/api/v1')
 
 questions = Questions()
+meetups = Meetup()
 
 
 @v1_question_blueprint.route('/questions', methods=['POST'])
@@ -23,9 +25,8 @@ def post_question():
     title = data.get('title')
     content = data.get('content')
 
-    question = jsonify(questions.post_question(
-        postedBy, meetup_id, title, content))
-    question.status_code = 201
+    question = questions.post_question(
+        postedBy, meetup_id, title, content)
 
     return question
 
@@ -48,7 +49,7 @@ def get_one_question(question_id):
     if question:
         return make_response(jsonify({
             'message': 'Success',
-            'question': question[0]}), 200)
+            'question': question}), 200)
     return make_response(jsonify({'message': 'question not found'}), 404)
 
 
@@ -57,9 +58,10 @@ def upvotes(question_id):
     """ verifies question to be upvoted exists"""
     question = questions.getone_question(question_id)
     if question:
-        upvote= Questions().upvotes(question_id)
-        return jsonify({"status": 201, 'message': 'Question upvoted'})
+        upvote = Questions().upvotes(question_id)
+        return jsonify({"status": 201, "data": upvote, 'message': 'Question upvoted'})
     return make_response(jsonify({'message': 'question not found'}), 404)
+
 
 @v1_question_blueprint.route('/questions/<int:question_id>/downvote', methods=['PATCH'])
 def downvotes(question_id):
@@ -67,5 +69,5 @@ def downvotes(question_id):
     question = questions.getone_question(question_id)
     if question:
         downvote = Questions().downvotes(question_id)
-        return jsonify({"status": 201, "data": downvote, 'message': 'Question downvoted' })
+        return jsonify({"status": 201, "data": downvote, 'message': 'Question downvoted'})
     return make_response(jsonify({'message': 'question not found'}), 404)

@@ -1,22 +1,23 @@
+from flask import jsonify
 import jwt
 from datetime import datetime, timedelta
 from instance.config import Config
+from .basemodels import BaseModels, users_list
 
-users = []
+
 SECRET_KEY = Config.SECRET_KEY
 token = {}
 
 
-class Users():
+class Users(BaseModels):
     """ A class that maps user data """
-
     def __init__(self):
-        self.db = users
+        self.db = 'user'
 
     def generate_auth_token(self, username):
         """ Generate auth token """
         try:
-            payload = {'exp': datetime.utcnow() + timedelta(days=0, seconds=120),
+            payload = {'exp': datetime.utcnow() + timedelta(days=0, seconds=180),
                        'iat': datetime.utcnow(), 'sub': username}
             return jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
         except Exception as e:
@@ -28,15 +29,15 @@ class Users():
             payload = jwt.decode(auth_token, SECRET_KEY)
             return payload['sub']
         except jwt.ExpiredSignatureError:
-            return 'Token exppired, login again'
+            return 'Token expired, login again'
         except jwt.InvalidTokenError:
             return 'Invalid token, login'
 
     def signup(self, firstname, lastname, othername, email, phoneNumber, username, isAdmin, password):
         """collects and creates signup details"""
         registered = datetime.now()
-        new_user = {
-            "user_id": len(users) + 1,
+        new = {
+            "user_id": len(users_list) + 1,
             "firstname": firstname,
             "lastname": lastname,
             "othername": othername,
@@ -48,11 +49,14 @@ class Users():
             "password": password
         }
 
-        self.db.append(new_user)
-        return new_user, {"message": "User was created successfully"}
+        self.save_data(new)
+        return new, {"message": "User was created successfully"}
 
-    def login(self, username):
+    def login(self, username, password):
         """logs in a user"""
-        user = [user for user in users if user["username"] == username]
-        if user:
-            return user
+        data = self.search_username("username", username)
+        if data:
+            if data["password"] == password:
+                return jsonify({"message": "successfully signed-in as {}".format(username)}), 200
+            return jsonify({"message": "invalid username or password"}), 403
+        return jsonify({"message": "user {} was not found".format(username)}), 404
