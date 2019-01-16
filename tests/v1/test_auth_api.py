@@ -107,13 +107,6 @@ class TestUser(unittest.TestCase):
                          "Please fill in all the required input fields")
         self.assertEqual(response.status_code, 400)
 
-    def test_is_whitespace(self):
-        response = self.client.post(
-            '/api/v1/signup', data=json.dumps(self.user6), content_type="application/json")
-        result = json.loads(response.data)
-        self.assertEqual(result["message"], "Data cannot contain white spaces only")
-        self.assertEqual(response.status_code, 400)
-
     def test_validate_phoneNumber(self):
         response = self.client.post(
             '/api/v1/signup', data=json.dumps(self.user2), content_type="application/json")

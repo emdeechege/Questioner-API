@@ -1,6 +1,7 @@
 import re
 from werkzeug.security import check_password_hash
-from app.api.v1.models.auth_models import users
+from app.api.v1.models.auth_models import Users
+from app.api.v1.models.basemodels  import BaseModels, users_list
 
 
 class Validation():
@@ -22,7 +23,7 @@ class Validation():
 
     def username_exists(self, username):
         """ verifies user existence in db"""
-        exists = [user for user in users if user['username'] == username]
+        exists = [user for user in users_list if user['username'] == username]
         if exists:
             return True
         else:
@@ -30,7 +31,7 @@ class Validation():
 
     def same_password(self, username, password):
         """ verifies passwords match on login"""
-        exists = [user for user in users if user['username'] == username]
+        exists = [user for user in users_list if user['username'] == username]
         if exists:
             validate = check_password_hash(exists['password'], password)
             if validate:
@@ -40,21 +41,13 @@ class Validation():
 
     def email_exists(self, email):
         """ check if emails exist"""
-        exists = [user for user in users if user['email'] == email]
+        exists = [user for user in users_list if user['email'] == email]
         if exists:
             return True
         else:
             return False
 
-
-    def list_iterator(list):
-        for i in list:
-            if i is None or not i:
-                return False
-
-
     def is_whitespace(self, payload):
         for item in payload:
-            if len(item) > 0:
+            if len(item) == 0:
                 return True
-        return False

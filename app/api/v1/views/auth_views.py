@@ -7,7 +7,7 @@ from ..models.auth_models import Users
 
 v1_auth_blueprint = Blueprint('auth', __name__, url_prefix='/api/v1')
 
-users = Users()
+user = Users()
 validator = Validation()
 
 
@@ -31,17 +31,16 @@ def signup():
     isAdmin = data.get('isAdmin')
     password = data.get('password')
 
-
     """ Check for empty inputs"""
     if not all(field in data for field in ["firstname", "othername", "email", "phoneNumber", "username", "isAdmin", "password"]):
         return jsonify({
-        "status": 400,
-        "message": "Please fill in all the required input fields"}), 400
+            "status": 400,
+            "message": "Please fill in all the required input fields"}), 400
 
     if not validator.validate_phoneNumber(phoneNumber):
         return jsonify({
-        "status": 400,
-        "message": "Please input valid phone number"
+            "status": 400,
+            "message": "Please input valid phone number"
         }), 400
 
     if validator.validate_password(password):
@@ -71,7 +70,7 @@ def signup():
     password = generate_password_hash(
         password, method='pbkdf2:sha256', salt_length=8)
 
-    user = users.signup(
+    res = user.signup(
         firstname, lastname, othername, email, phoneNumber, username, isAdmin, password)
     return jsonify({
         "status": 201,
@@ -85,6 +84,7 @@ def signup():
             "isAdmin": isAdmin,
         }]
     }), 201
+
 
 @v1_auth_blueprint.route('/login', methods=['POST'])
 def login():
@@ -110,25 +110,24 @@ def login():
             "message": "Password is required"
         })), 400
 
-    if  not validator.username_exists(username):
+    if not validator.username_exists(username):
         return jsonify({
             "status": 404,
             "message": "User does not exist"
         }), 404
 
+    current_user = user.login(username)
 
-    user = users.login(username)
-
-    if user:
-        usr = user[0]
-        if check_password_hash(usr["password"], password):
-            auth_token = users.generate_auth_token(username)
+    if current_user:
+        usr = current_user[0]
+        if validator.same_password(usr["password"], password):
+            auth_token = user.generate_auth_token(username)
             return make_response(jsonify({
                 "status": 200,
                 "message": 'Logged in successfuly',
                 "token": auth_token
             })), 200
     return make_response(jsonify({
-            "status": 400,
-            "message": "Incorrect password"
-        })), 400
+        "status": 400,
+        "message": "Incorrect password"
+    })), 400

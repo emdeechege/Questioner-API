@@ -1,22 +1,19 @@
+from flask import jsonify
 from datetime import datetime
-from .basemodels import BaseModels
-
-meetups = []
-rsvp = []
+from .basemodels import BaseModels, meetups_list, rsvp_list
 
 
 class Meetup(BaseModels):
     """ Creates the meetup record model """
 
     def __init__(self):
-        self.db = meetups
-        self.rsvp = rsvp
+        self.db = 'meetups'
         self.now = datetime.now().strftime("%H:%M%P %A %d %B %Y"),
 
     def create_meetup(self, title, createdOn, organizer, images, location, happeningOn, tags):
         """ method to add meetup """
-        new_meetup = {
-            "meetup_id": len(meetups) + 1,
+        new = {
+            "meetup_id": len(meetups_list) + 1,
             "title": title,
             "organizer": organizer,
             "images": images,
@@ -26,26 +23,36 @@ class Meetup(BaseModels):
             "tags": tags
         }
 
-        self.db.append(new_meetup)
-        return new_meetup, {"message": "meetup was created successfully"}
+        self.save_data(new)
+        return new, {"message": "Meetup added successfully"}
 
     def getall_meetups(self):
         """method to get all meetups"""
-        return self.db
+        return self.check_db()
 
     def getone_meetup(self, meetup_id):
         """method to fetch one meetup"""
-        meetup = self.check_item(meetup_id, "meetup_id", meetups)
+        meetup = self.search_meetup("meetup_id", meetup_id)
         return meetup
+
+
+class Rsvp(BaseModels):
+    """ Creates the RSVP record model """
+    def __init__(self):
+        self.db = 'rsvp'
 
     def post_rsvp(self, user_id, meetup_id, response):
         """ method for rsvp meetup """
-        rsvp = {
-            "rsvp_id": len(self.rsvp) + 1,
+        new = {
+            "rsvp_id": len(rsvp_list) + 1,
             "user_id": user_id,
             "meetup_id": meetup_id,
             "response": response
         }
 
-        self.rsvp.append(rsvp)
-        return rsvp, {"message": "RSVP successfull"}
+        data = self.search_meetup("meetup_id", meetup_id)
+        if data:
+            self.save_data(new)
+            return jsonify(new, {"message": "RSVP successful"}), 201
+        else:
+            return jsonify({"message": "Meetup not found"}), 404

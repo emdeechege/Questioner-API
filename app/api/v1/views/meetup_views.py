@@ -1,11 +1,12 @@
 from flask import jsonify, Blueprint, request, json, make_response
 from datetime import datetime
-from ..models.meetups_models import Meetup
+from ..models.meetups_models import Meetup, Rsvp
 
 
 v1_meetup_blueprint = Blueprint('meetups', __name__, url_prefix='/api/v1')
 
 meetups = Meetup()
+rsvp = Rsvp()
 
 
 @v1_meetup_blueprint.route('/meetups', methods=['POST'])
@@ -44,7 +45,7 @@ def getall():
             "message": "Success",
             "meetups": data
         }), 200)
-    return make_response(jsonify({'message': 'meetup not found'}), 404)
+    return make_response(jsonify({'message': 'Meetup not found'}), 404)
 
 
 @v1_meetup_blueprint.route('/meetups/<int:meetup_id>', methods=['GET'])
@@ -53,15 +54,18 @@ def get_one_meetup(meetup_id):
     meetup = meetups.getone_meetup(meetup_id)
     if meetup:
         return make_response(jsonify({
-            'message': 'Success',
-            'meetup': meetup[0]}), 200)
-    return make_response(jsonify({'message': 'meetup not found'}), 404)
+            "message": "Success",
+            "meetup": meetup
+        })), 200
+    return make_response(jsonify({'message': 'Meetup not found'}), 404)
 
 
 @v1_meetup_blueprint.route('/meetups/<int:meetup_id>/rsvp', methods=['POST'])
 def rsvp_meetup(meetup_id):
     """ endpoint for rsvp meetup """
     data = request.get_json()
+    if not data:
+        return jsonify({"message": "Data set cannot be empty"}), 400
 
     meetup = meetups.getone_meetup(meetup_id)
     if meetup:
@@ -69,7 +73,7 @@ def rsvp_meetup(meetup_id):
         meetup_id = meetup_id
         response = data.get('response')
 
-        res = jsonify(meetups.post_rsvp(user_id, meetup_id, response))
-        res.status_code = 201
+        res = rsvp.post_rsvp(user_id, meetup_id, response)
+        
         return res
-    return make_response(jsonify({'message': 'meetup not found'}), 404)
+    return make_response(jsonify({'message': 'Meetup not found'}), 404)
