@@ -13,8 +13,7 @@ class TestValidators(unittest.TestCase):
     def setUp(self):
         """ Defining test variables """
 
-        self.app = create_app()
-        self.client = self.app.test_client()
+        self.client = create_app(config_name="testing").test_client()
         self.data = Validation()
 
     def tearDown(self):
@@ -33,5 +32,3 @@ class TestValidators(unittest.TestCase):
         emails = ['tom@game.com', 'star@rises.net']
         test = self.data.email_exists(email)
         self.assertTrue(email in emails)
-
-    
