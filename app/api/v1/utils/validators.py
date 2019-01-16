@@ -24,6 +24,8 @@ class Validation():
     def username_exists(self, username):
         """ verifies user existence in db"""
         exists = [user for user in users_list if user['username'] == username]
+        print(users_list)
+        print(username)
         if exists:
             return True
         else:
@@ -36,9 +38,3 @@ class Validation():
             return True
         else:
             return False
-
-    def is_whitespace(self, payload):
-        """ check for white spaces"""
-        for item in payload:
-            if len(item) == 0:
-                return True

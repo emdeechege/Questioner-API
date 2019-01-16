@@ -99,15 +99,8 @@ class TestUser(unittest.TestCase):
         self.assertEqual(result["status"], 201)
         self.assertIn("Kijana", str(result))
 
-    def test_submit_empty_signup_fields(self):
-        response = self.client.post(
-            '/api/v1/signup', data=json.dumps(self.user1), content_type="application/json")
-        result = json.loads(response.data)
-        self.assertEqual(result["message"],
-                         "Please fill in all the required input fields")
-        self.assertEqual(response.status_code, 400)
-
     def test_validate_phoneNumber(self):
+        """test phone number"""
         response = self.client.post(
             '/api/v1/signup', data=json.dumps(self.user2), content_type="application/json")
         result = json.loads(response.data)
@@ -116,6 +109,7 @@ class TestUser(unittest.TestCase):
         self.assertTrue(response.status_code, 400)
 
     def test_validate_email(self):
+        """ validate email"""
         response = self.client.post(
             '/api/v1/signup', data=json.dumps(self.user3), content_type="application/json")
         result = json.loads(response.data)
@@ -124,11 +118,11 @@ class TestUser(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_username_exists(self):
+        """username exists"""
         response = self.client.post(
             '/api/v1/signup', data=json.dumps(self.user), content_type="application/json")
         result = json.loads(response.data)
-        self.assertEqual(result["message"],
-                         "Username exists")
+        self.assertEqual(result["message"], "Username exists")
         self.assertEqual(response.status_code, 400)
 
     def test_user_login(self):
@@ -145,6 +139,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(result1["message"], "User does not exist")
 
     def test_username_required(self):
+        """username test"""
         response2 = self.client.post(
             "/api/v1/login", data=json.dumps(self.login2), content_type="application/json")
         result2 = json.loads(response2.data.decode())
@@ -154,7 +149,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(result2["message"], "Username is required")
 
     def test_password_required(self):
-
+        """password required"""
         response3 = self.client.post(
             "/api/v1/login", data=json.dumps(self.login3), content_type="application/json")
         result3 = json.loads(response3.data.decode())

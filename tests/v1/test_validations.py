@@ -34,7 +34,4 @@ class TestValidators(unittest.TestCase):
         test = self.data.email_exists(email)
         self.assertTrue(email in emails)
 
-    def test_is_whitespace(self):
-        """method to test absence of whitespace"""
-        test = self.data.is_whitespace(["ab", "ab"])
-        self.assertFalse(test)
+    

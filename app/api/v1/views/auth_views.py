@@ -32,10 +32,36 @@ def signup():
     password = data.get('password')
 
     """ Check for empty inputs"""
-    if not all(field in data for field in ["firstname", "othername", "email", "phoneNumber", "username", "isAdmin", "password"]):
-        return jsonify({
+    if not firstname or not firstname.split():
+        return make_response(jsonify({
             "status": 400,
-            "message": "Please fill in all the required input fields"}), 400
+            "message": "Firstname is required"
+        })), 400
+    if not lastname or not lastname.split():
+        return make_response(jsonify({
+            "status": 400,
+            "message": "Lastname is required"
+        })), 400
+    if not email or not email.split():
+        return make_response(jsonify({
+            "status": 400,
+            "message": "Email is required"
+        })), 400
+    if not phoneNumber or not phoneNumber.split():
+        return make_response(jsonify({
+            "status": 400,
+            "message": "Phonenumber is required"
+        })), 400
+    if not username or not username.split():
+        return make_response(jsonify({
+            "status": 400,
+            "message": "Username is required"
+        })), 400
+    if not password or not password.split():
+        return make_response(jsonify({
+            "status": 400,
+            "message": "Password is required"
+        })), 400
 
     if not validator.validate_phoneNumber(phoneNumber):
         return jsonify({
@@ -81,7 +107,7 @@ def signup():
             "email": email,
             "phoneNumber": phoneNumber,
             "username": username,
-            "isAdmin": isAdmin,
+            "isAdmin": isAdmin
         }]
     }), 201
 
