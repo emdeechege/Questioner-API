@@ -11,8 +11,7 @@ class TestUser(unittest.TestCase):
     def setUp(self):
         """ Defining test variables """
 
-        self.app = create_app()
-        self.client = self.app.test_client()
+        self.client = create_app(config_name="testing").test_client()
 
         self.user = {
             "firstname": "Angry",

@@ -8,8 +8,7 @@ class TestQuestions(unittest.TestCase):
     """Test Question class"""
 
     def setUp(self):
-        self.app = create_app()
-        self.client = self.app.test_client()
+        self.client = create_app(config_name="testing").test_client()
         self.question = {
             "title": "Why now?",
             "content": "True or false"
