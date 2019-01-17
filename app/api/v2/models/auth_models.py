@@ -1,6 +1,6 @@
-from flask import jsonify
-import jwt
 from datetime import datetime, timedelta
+import jwt
+
 from instance.config import Config
 from .basemodels import BaseModels
 from ....connect import init_db
