@@ -8,7 +8,7 @@ from instance.config import Config
 
 def init_db():
     """ setup database connection"""
-    url = os.getenv('DATABASE_URL')
+
     conn = psycopg2.connect("dbname=questioner user=emdee password=arif@123")
     conn.commit()
     return conn
@@ -19,7 +19,7 @@ def connect():
 
 def test_init_db():
     """set up db testing environment"""
-    test_url = os.getenv('DATABASE_TEST_URL')
+
     conn = psycopg2.connect("dbname=questioner_test user=emdee password=arif@123")
     destroy()
     conn.commit()
@@ -35,7 +35,7 @@ def create_tables(conn):
 
 def destroy():
     """tear down for db during after tests"""
-    test_url = os.getenv('DATABASE_TEST_URL')
+    
     conn = psycopg2.connect("dbname=questioner_test user=emdee password=arif@123")
     curr = conn.cursor()
     users = "DROP TABLE IF EXISTS users CASCADE"

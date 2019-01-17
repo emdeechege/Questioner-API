@@ -32,7 +32,7 @@ def post_question():
 
 
 @v1_question_blueprint.route('/questions', methods=['GET'])
-def getall():
+def get_all_questions():
     """ endpoint to fetch all questions """
 
     data = questions.getall_questions()
