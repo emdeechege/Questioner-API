@@ -1,7 +1,7 @@
-import psycopg2
 import os
+import psycopg2
 from flask import current_app
-from database import migrations
+from app.database import migrations
 
 def db_init():
     """ setup database connection"""
