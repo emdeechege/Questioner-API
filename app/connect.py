@@ -1,7 +1,7 @@
 import os
 import psycopg2
 from flask import current_app
-from app.database import migrations
+from app import schema
 
 def db_init():
     """ setup database connection"""
@@ -24,7 +24,7 @@ def test_db_init():
 
 def create_tables(conn):
     curr = conn.cursor()
-    tables = migrations.tables()
+    tables = schema.tables()
 
     for query in tables:
         curr.execute(query)
