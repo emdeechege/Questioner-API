@@ -44,6 +44,6 @@ def tables():
         response varchar varying(30) NOT NULL,
     );"""
 
-    tables =[users,meetups,questions,rsvps]
+    tables = [users,meetups,questions,rsvps]
 
     return tables
