@@ -12,9 +12,10 @@ token = {}
 
 class Users(BaseModels):
     """ A class that maps user data """
-
     def __init__(self):
-        self.db = init_db()
+         """initialize the user model"""
+         self.db = init_db()
+
 
     def generate_auth_token(self, username):
         """ Generate auth token """
@@ -35,7 +36,7 @@ class Users(BaseModels):
         except jwt.InvalidTokenError:
             return 'Invalid token, login'
 
-    def signup(self, firstname, lastname, othername, email, phoneNumber, username, isAdmin, password):
+    def signup(self, firstname=None, lastname=None, othername=None, email=None, phoneNumber=None, username=None, isAdmin=False, password=None):
         """collects and creates signup details"""
         registered = datetime.now()
         user = {
@@ -50,15 +51,12 @@ class Users(BaseModels):
             "password": password
         }
 
-        database = self.db
-        curr = database.cursor()
-        query = """INSERT INTO users (firstname, lastname, othername, email, phoneNumber, username, registered, password, is_admin) \
-            VALUES (%(firstname)s, %(lastname)s, %(othername)s, %(email)s, %(phoneNumber),\
-            %(username)s, %(registered), %(password)s, \
-            %(isAdmin)s) RETURNING username;
-            """
-        curr.execute(query, user)
-        username = curr.fetchone()[0]
-        database.commit()
-        curr.close()
-        return ("{} saved sucessfully".format(username))
+        cursor = self.db .cursor()
+        query = """INSERT INTO users (firstname, lastname, othername, email, phoneNumber, username, isAdmin, password) \
+        VALUES (%(firstname)s, %(lastname)s, %(othername)s, %(email)s, %(phoneNumber)s, %(username)s, \
+        %(isAdmin)s, %(password)s) RETURNING user_id"""
+        cursor.execute(query, user)
+        user_id = cursor.fetchone()[0]
+        self.db .commit()
+        cursor.close()
+        return int(user_id)

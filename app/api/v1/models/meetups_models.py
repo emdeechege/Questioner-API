@@ -32,7 +32,7 @@ class Meetup(BaseModels):
 
     def getone_meetup(self, meetup_id):
         """method to fetch one meetup"""
-        meetup = self.search_meetup("meetup_id", meetup_id)
+        meetup = self.search_db("meetup_id", meetup_id)
         return meetup
 
 
@@ -50,7 +50,7 @@ class Rsvp(BaseModels):
             "response": response
         }
 
-        data = self.search_meetup("meetup_id", meetup_id)
+        data = self.search_db("meetup_id", meetup_id)
         if data:
             self.save_data(new)
             return jsonify(new, {"message": "RSVP successful"}), 201
