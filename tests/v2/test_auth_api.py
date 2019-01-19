@@ -2,7 +2,7 @@ import unittest, json
 from app import create_app
 
 
-from app.connect import test_init_db, destroy
+from app.connect import test_init_db, destroy_tests
 
 
 class TestUser(unittest.TestCase):
@@ -96,7 +96,7 @@ class TestUser(unittest.TestCase):
         check = self.client.post(
             "/api/v1/signup", data=json.dumps(self.user), content_type="application/json")
         result = json.loads(check.data.decode())
-        
+
         self.assertEqual(check.status_code, 201)
         self.assertEqual(result["status"], 201)
         self.assertIn("Truant", str(result))
@@ -164,7 +164,7 @@ class TestUser(unittest.TestCase):
             """This function destroys objests created during the test run"""
 
         with self.app.app_context():
-            destroy()
+            destroy_tests()
             self.db.close()
 
 

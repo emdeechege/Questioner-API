@@ -38,13 +38,13 @@ def tables():
         createdOn timestamp with time zone DEFAULT ('now'::text)::date NOT NULL
     );"""
 
-    rsvps = """CREATE TABLE IF NOT EXISTS rsvps(
+    rsvp = """CREATE TABLE IF NOT EXISTS rsvp(
         id serial PRIMARY KEY NOT NULL,
         meetup_id numeric NOT NULL,
         user_id numeric NOT NULL,
         response character varying(30) NOT NULL
     );"""
 
-    queries = [users, meetups, questions, rsvps]
+    queries = [users, meetups, questions, rsvp]
 
     return queries
