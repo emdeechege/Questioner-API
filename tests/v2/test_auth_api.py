@@ -101,6 +101,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(result["status"], 201)
         self.assertIn("Truant", str(result))
 
+
     def test_validate_phoneNumber(self):
         """test phone number"""
         response = self.client.post(

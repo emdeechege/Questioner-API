@@ -1,4 +1,7 @@
+import jwt
+from datetime import datetime, timedelta
 from flask import jsonify, make_response
+
 
 from app.connect import init_db
 
@@ -21,13 +24,28 @@ class BaseModels(object):
             return True
 
 
-    def check_exists(self, table, field, data):
+    def check_exists(self, username):
         """Check if the records exist"""
         curr = self.db.cursor()
-        query = "SELECT * FROM {} WHERE {}={};".format(table, field, data)
+        query = "SELECT username FROM users WHERE username = '%s'" % (username)
         curr.execute(query)
-        data = curr.fetchone()
-        if data:
-            return True
-        else:
-            return False
+        return curr.fetchone() is not None
+
+    def generate_auth_token(self, username):
+        """ Generate auth token """
+        try:
+            payload = {'exp': datetime.utcnow() + timedelta(days=0, seconds=180),
+                       'iat': datetime.utcnow(), 'sub': username}
+            return jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
+        except Exception as e:
+            return e
+
+    def verify_auth_token(self, auth_token):
+        """Verify auth token """
+        try:
+            payload = jwt.decode(auth_token, SECRET_KEY)
+            return payload['sub']
+        except jwt.ExpiredSignatureError:
+            return 'Token expired, login again'
+        except jwt.InvalidTokenError:
+            return 'Invalid token, login'

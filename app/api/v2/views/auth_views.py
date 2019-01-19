@@ -98,17 +98,9 @@ def signup():
 
     res = user.signup(
         firstname, lastname, othername, email, phoneNumber, username, isAdmin, password)
-    return jsonify({
+    return jsonify(res,{
         "status": 201,
-        "data": [{
-            "firstname": firstname,
-            "lastname": lastname,
-            "othername": othername,
-            "email": email,
-            "phoneNumber": phoneNumber,
-            "username": username,
-            "isAdmin": isAdmin
-        }]
+        "message": "successfuly registered"
     }), 201
 
 
