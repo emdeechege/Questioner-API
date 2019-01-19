@@ -32,7 +32,7 @@ class Meetup(BaseModels):
 
     def getone_meetup(self, meetup_id):
         """method to fetch one meetup"""
-        meetup = self.search_meetup("meetup_id", meetup_id)
+        meetup = self.search_db("meetup_id", meetup_id)
         return meetup
 
 

@@ -74,6 +74,6 @@ def rsvp_meetup(meetup_id):
         response = data.get('response')
 
         res = rsvp.post_rsvp(user_id, meetup_id, response)
-        
+
         return res
     return make_response(jsonify({'message': 'Meetup not found'}), 404)

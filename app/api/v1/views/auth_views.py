@@ -117,6 +117,7 @@ def login():
     """ A view to control users login """
     try:
         data = request.get_json()
+
     except:
         return make_response(jsonify({
             "status": 400,
