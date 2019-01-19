@@ -38,10 +38,9 @@ class Users(BaseModels):
         query = """INSERT INTO users (firstname, lastname,\
          othername, email, phoneNumber, username, isAdmin, password) \
         VALUES (%(firstname)s, %(lastname)s, %(othername)s, %(email)s, %(phoneNumber)s, %(username)s, \
-        %(isAdmin)s, %(password)s) RETURNING user_id"""
+        %(isAdmin)s, %(password)s) RETURNING user"""
 
         cursor.execute(query, user)
-        user_id = cursor.fetchone()[0]
         self.db .commit()
         cursor.close()
-        return int(user_id)
+        return user
