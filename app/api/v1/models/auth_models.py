@@ -2,7 +2,7 @@ from flask import jsonify
 import jwt
 from datetime import datetime, timedelta
 from instance.config import Config
-from .basemodels import BaseModels, users_list
+from .basemodels import BaseModels, USERS_LIST
 
 
 SECRET_KEY = Config.SECRET_KEY
@@ -38,7 +38,7 @@ class Users(BaseModels):
         """collects and creates signup details"""
         registered = datetime.now()
         new = {
-            "user_id": len(users_list) + 1,
+            "user_id": len(USERS_LIST) + 1,
             "firstname": firstname,
             "lastname": lastname,
             "othername": othername,

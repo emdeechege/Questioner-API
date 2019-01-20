@@ -1,6 +1,6 @@
 from flask import jsonify
 from datetime import datetime
-from .basemodels import BaseModels, meetups_list, rsvp_list
+from .basemodels import BaseModels, MEETUPS_LIST, RSVP_LIST
 
 
 class Meetup(BaseModels):
@@ -13,7 +13,7 @@ class Meetup(BaseModels):
     def create_meetup(self, title, createdOn, organizer, images, location, happeningOn, tags):
         """ method to add meetup """
         new = {
-            "meetup_id": len(meetups_list) + 1,
+            "meetup_id": len(MEETUPS_LIST) + 1,
             "title": title,
             "organizer": organizer,
             "images": images,
@@ -44,7 +44,7 @@ class Rsvp(BaseModels):
     def post_rsvp(self, user_id, meetup_id, response):
         """ method for rsvp meetup """
         new = {
-            "rsvp_id": len(rsvp_list) + 1,
+            "rsvp_id": len(RSVP_LIST) + 1,
             "user_id": user_id,
             "meetup_id": meetup_id,
             "response": response
