@@ -7,10 +7,10 @@ class Questions(BaseModels):
 
     def __init__(self):
         self.db = 'questions'
-        
+
     def post_question(self, posted_by, meetup_id, title, content):
         """generate new question"""
-        new = {
+        new_question = {
             "question_id": len(QUESTIONS_LIST) + 1,
             "posted_by": posted_by,
             "meetup_id": meetup_id,
@@ -21,8 +21,8 @@ class Questions(BaseModels):
         for record in MEETUPS_LIST:
             if record["meetup_id"] == meetup_id:
                 return jsonify({"message": "Meetup does not exist"}), 404
-        self.save_data(new)
-        return jsonify(new, {"message": "Question added successfully"}), 201
+        self.save_data(new_question)
+        return jsonify(new_question, {"message": "Question added successfully"}), 201
 
     def getall_questions(self):
         """method to return all questions"""

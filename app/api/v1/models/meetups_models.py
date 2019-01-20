@@ -11,7 +11,7 @@ class Meetup(BaseModels):
 
     def create_meetup(self, title, organizer, images, location, happening_on, tags):
         """ method to add meetup """
-        new = {
+        new_meetup = {
             "meetup_id": len(MEETUPS_LIST) + 1,
             "title": title,
             "organizer": organizer,
@@ -22,8 +22,8 @@ class Meetup(BaseModels):
             "tags": tags
         }
 
-        self.save_data(new)
-        return new, {"message": "Meetup added successfully"}
+        self.save_data(new_meetup)
+        return new_meetup, {"message": "Meetup added successfully"}
 
     def getall_meetups(self):
         """method to get all meetups"""
@@ -42,15 +42,15 @@ class Rsvp(BaseModels):
 
     def post_rsvp(self, user_id, meetup_id, response):
         """ method for rsvp meetup """
-        new = {
+        new_rsvp = {
             "rsvp_id": len(RSVP_LIST) + 1,
             "user_id": user_id,
             "meetup_id": meetup_id,
             "response": response
         }
-
-        data = self.search_db("meetup_id", meetup_id)
+        data = self.search_meetup("meetup_id", meetup_id)
         if data:
-            self.save_data(new)
-            return jsonify(new, {"message": "RSVP successful"}), 201
-        return jsonify({"message": "Meetup not found"}), 404
+            self.save_data(new_rsvp)
+            return jsonify(new_rsvp, {"message": "RSVP successful"}), 201
+        else:
+            return jsonify({"message": "Meetup not found"}), 404

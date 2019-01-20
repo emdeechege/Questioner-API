@@ -48,6 +48,14 @@ class BaseModels(object):
 
         return db
 
+    def search_meetup(self, key, item):
+        """search for meetup"""
+        data = [record for record in MEETUPS_LIST if record[key] == item]
+        if data:
+            return data[0]
+        else:
+            return False
+
     @classmethod
     def questions_meetups(cls):
         """append questions to meetups"""

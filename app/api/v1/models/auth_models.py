@@ -37,7 +37,7 @@ class Users(BaseModels):
      username, is_admin, password):
         """collects and creates signup details"""
         registered = datetime.now()
-        new = {
+        user = {
             "user_id": len(USERS_LIST) + 1,
             "firstname": firstname,
             "lastname": lastname,
@@ -50,8 +50,8 @@ class Users(BaseModels):
             "password": password
         }
 
-        self.save_data(new)
-        return new, {"message": "User was created successfully"}
+        self.save_data(user)
+        return user, {"message": "User was created successfully"}
 
     def login(self, username, password):
         """logs in a user"""

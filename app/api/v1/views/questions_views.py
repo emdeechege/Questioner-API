@@ -36,10 +36,10 @@ def post_question():
 def get_all_questions():
     """ endpoint to fetch all questions """
 
-    data = QUESTIONS.getall_questions()
+    all_questions = QUESTIONS.getall_questions()
     return make_response(jsonify({
         "message": "Success",
-        "meetups": data
+        "meetups": all_questions
     }), 200)
 
 
