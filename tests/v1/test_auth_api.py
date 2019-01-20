@@ -18,8 +18,8 @@ class TestUser(unittest.TestCase):
             "lastname": "Stars",
             "othername": "Birds",
             "email": "cham@gmail.com",
-            "phoneNumber": "123456789",
-            "isAdmin": "True",
+            "phone_number": "123456789",
+            "is_admin": "True",
             "username": "Kijana",
             "password": "Ch@mp19?yes"
         }
@@ -28,8 +28,8 @@ class TestUser(unittest.TestCase):
             "lastname": "Tar",
             "othername": "Blur",
             "email": "cham@gmail.com",
-            "phoneNumber": "1234756789",
-            "isAdmin": "False",
+            "phone_number": "1234756789",
+            "is_admin": "False",
             "username": "Kiboss",
             "password": "Ch@mp19?no"
         }
@@ -41,8 +41,8 @@ class TestUser(unittest.TestCase):
             "lastname": "Stars",
             "othername": "Birds",
             "email": "cham@gmail.com",
-            "phoneNumber": "12345wedr",
-            "isAdmin": "True",
+            "phone_number": "12345wedr",
+            "is_admin": "True",
             "username": "Kijana",
             "password": "Ch@mp19?yes"
         }
@@ -51,8 +51,8 @@ class TestUser(unittest.TestCase):
             "lastname": "Stoway",
             "othername": "Birth",
             "email": "chamergmail.com",
-            "phoneNumber": "1234534",
-            "isAdmin": "True",
+            "phone_number": "1234534",
+            "is_admin": "True",
             "username": "Kijanadf",
             "password": "Ch@mp19?yes"
         }
@@ -61,8 +61,8 @@ class TestUser(unittest.TestCase):
             "lastname": "Stoway",
             "othername": "Birth",
             "email": "chamer@gmail.com",
-            "phoneNumber": "1234534",
-            "isAdmin": "True",
+            "phone_number": "1234534",
+            "is_admin": "True",
             "username": "Kijanadf",
             "password": "Ch@mp19?yes"
         }
@@ -98,7 +98,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(result["status"], 201)
         self.assertIn("Kijana", str(result))
 
-    def test_validate_phoneNumber(self):
+    def test_validate_phone_number(self):
         """test phone number"""
         response = self.client.post(
             '/api/v1/signup', data=json.dumps(self.user2), content_type="application/json")

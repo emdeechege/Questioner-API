@@ -6,7 +6,7 @@ from .basemodels import BaseModels, users_list
 
 
 SECRET_KEY = Config.SECRET_KEY
-token = {}
+
 
 
 class Users(BaseModels):
@@ -33,7 +33,8 @@ class Users(BaseModels):
         except jwt.InvalidTokenError:
             return 'Invalid token, login'
 
-    def signup(self, firstname, lastname, othername, email, phoneNumber, username, isAdmin, password):
+    def signup(self, firstname, lastname, othername, email, phone_number,\
+     username, is_admin, password):
         """collects and creates signup details"""
         registered = datetime.now()
         new = {
@@ -42,10 +43,10 @@ class Users(BaseModels):
             "lastname": lastname,
             "othername": othername,
             "email": email,
-            "phoneNumber": phoneNumber,
+            "phone_number": phone_number,
             "username": username,
             "registered": registered,
-            "isAdmin": isAdmin,
+            "is_admin": is_admin,
             "password": password
         }
 

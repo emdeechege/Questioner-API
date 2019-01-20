@@ -16,10 +16,10 @@ class Validation():
         expects = "r'(?=(.*[0-9]))((?=.*[A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[$#@]))^.{6,12}$'"
         return re.match(expects, password)
 
-    def validate_phoneNumber(self, phoneNumber):
+    def validate_phone_number(self, phone_number):
         """ check that phone number is digit """
         phone = "^[0-9]+$"
-        return re.match(phone, phoneNumber)
+        return re.match(phone, phone_number)
 
     def username_exists(self, username):
         """ verifies user existence in db"""

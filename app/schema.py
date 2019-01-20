@@ -9,21 +9,21 @@ def tables():
         lastname  character varying(50) NOT NULL,
         othername character varying(50) NOT NULL,
         email  character varying(70) UNIQUE,
-        phoneNumber numeric NOT NULL,
+        phone_number numeric NOT NULL,
         username character varying(50) NOT NULL,
         password character varying(1000) NOT NULL,
-        isAdmin BOOLEAN NOT NULL DEFAULT FALSE,
+        is_admin BOOLEAN NOT NULL DEFAULT FALSE,
         registered timestamp default current_timestamp
     );"""
 
     meetups = """CREATE TABLE IF NOT EXISTS meetups(
         meetup_id serial PRIMARY KEY NOT NULL,
-        happenningOn date NOT NULL,
+        happenning_on date NOT NULL,
         location character varying(50) NULL,
         images text NULL,
         topic character varying(200) NOT NULL,
         tags text NULL,
-        createdOn timestamp default current_timestamp
+        created_on timestamp default current_timestamp
     );"""
 
 
@@ -31,7 +31,7 @@ def tables():
         question_id serial PRIMARY KEY NOT NULL,
         meetup_id numeric NOT NULL,
         user_id numeric NOT NULL,
-        postedBy numeric NOT NULL,
+        posted_by numeric NOT NULL,
         title character varying(200) NOT NULL,
         body text NOT NULL,
         votes integer DEFAULT 0,
