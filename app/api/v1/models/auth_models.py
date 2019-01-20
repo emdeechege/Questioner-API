@@ -55,7 +55,7 @@ class Users(BaseModels):
 
     def login(self, username, password):
         """logs in a user"""
-        data = self.search_username("username", username)
+        data = self.search_db("username", username)
         if data:
             if data["password"] == password:
                 return jsonify({"message": "successfully signed-in as {}".format(username)}), 200
