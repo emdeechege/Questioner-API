@@ -2,13 +2,12 @@ from datetime import datetime, timedelta
 from flask import jsonify
 
 
-from instance.config import Config
+
 from .basemodels import BaseModels
 from ....connect import init_db
 
 
-SECRET_KEY = Config.SECRET_KEY
-token = {}
+
 
 
 class Users(BaseModels):
@@ -18,8 +17,8 @@ class Users(BaseModels):
         """initialize the user model"""
         self.db = init_db()
 
-    def signup(self, firstname=None, lastname=None, othername=None, email=None, \
-    phoneNumber=None, username=None, isAdmin=False, password=None):
+    def signup(self, firstname=None, lastname=None, othername=None, email=None,
+               phone_number=None, username=None, is_admin=False, password=None):
         """collects and creates signup details"""
         registered = datetime.now()
         user = {
@@ -27,21 +26,21 @@ class Users(BaseModels):
             "lastname": lastname,
             "othername": othername,
             "email": email,
-            "phoneNumber": phoneNumber,
+            "phone_number": phone_number,
             "username": username,
             "registered": registered,
-            "isAdmin": isAdmin,
+            "is_admin": is_admin,
             "password": password
         }
 
         cursor = self.db .cursor()
         query = """INSERT INTO users (firstname, lastname,\
-         othername, email, phoneNumber, username, isAdmin, password) \
-        VALUES (%(firstname)s, %(lastname)s, %(othername)s, %(email)s, %(phoneNumber)s, %(username)s, \
-        %(isAdmin)s, %(password)s) RETURNING username"""
+         othername, email, phone_number, username, is_admin, password) \
+        VALUES (%(firstname)s, %(lastname)s, %(othername)s, %(email)s, %(phone_number)s, %(username)s, \
+        %(is_admin)s, %(password)s) RETURNING username"""
 
         cursor.execute(query, user)
-        cursor.fetchone()[0]
+        username = cursor.fetchone()[0]
         self.db .commit()
         cursor.close()
         return username

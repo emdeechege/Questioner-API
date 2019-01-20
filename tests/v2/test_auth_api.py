@@ -19,8 +19,8 @@ class TestUser(unittest.TestCase):
             "lastname": "Sky",
             "othername": "Tea",
             "email": "tam@gmail.com",
-            "phoneNumber": "123456789",
-            "isAdmin": "True",
+            "phone_number": "123456789",
+            "is_admin": "True",
             "username": "Truant",
             "password": "Ch@mp19?yes"
         }
@@ -29,8 +29,8 @@ class TestUser(unittest.TestCase):
             "lastname": "Tar",
             "othername": "Blur",
             "email": "tam@gmail.com",
-            "phoneNumber": "1234756789",
-            "isAdmin": "False",
+            "phone_number": "1234756789",
+            "is_admin": "False",
             "username": "Kiboss",
             "password": "Ch@mp19?no"
         }
@@ -42,8 +42,8 @@ class TestUser(unittest.TestCase):
             "lastname": "Hunter",
             "othername": "Caps",
             "email": "tampion@gmail.com",
-            "phoneNumber": "123498rttt",
-            "isAdmin": "False",
+            "phone_number": "123498rttt",
+            "is_admin": "False",
             "username": "Awesome",
             "password": "Ch@mp19?no"
         }
@@ -52,8 +52,8 @@ class TestUser(unittest.TestCase):
             "lastname": "Stoway",
             "othername": "Birth",
             "email": "tamergmail.com",
-            "phoneNumber": "1234534",
-            "isAdmin": "True",
+            "phone_number": "1234534",
+            "is_admin": "True",
             "username": "Roughdf",
             "password": "Ch@mp19?yes"
         }
@@ -62,8 +62,8 @@ class TestUser(unittest.TestCase):
             "lastname": "Stoway",
             "othername": "Birth",
             "email": "tamer@gmail.com",
-            "phoneNumber": "1234534",
-            "isAdmin": "True",
+            "phone_number": "1234534",
+            "is_admin": "True",
             "username": "Roughdf",
             "password": "Ch@mp19?yes"
         }
@@ -102,7 +102,7 @@ class TestUser(unittest.TestCase):
         self.assertIn("Truant", str(result))
 
 
-    def test_validate_phoneNumber(self):
+    def test_validate_phone_number(self):
         """test phone number"""
         response = self.client.post(
             '/api/v1/signup', data=json.dumps(self.user2), content_type="application/json")

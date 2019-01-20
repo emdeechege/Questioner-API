@@ -1,10 +1,13 @@
 import jwt
 from datetime import datetime, timedelta
 from flask import jsonify, make_response
+from instance.config import Config
 
 
 from app.connect import init_db
 
+SECRET_KEY = Config.SECRET_KEY
+token = {}
 
 class BaseModels(object):
     """ contains methods common to other models """
@@ -31,6 +34,7 @@ class BaseModels(object):
         curr.execute(query)
         return curr.fetchone() is not None
 
+    @staticmethod
     def generate_auth_token(self, username):
         """ Generate auth token """
         try:
@@ -40,6 +44,7 @@ class BaseModels(object):
         except Exception as e:
             return e
 
+    @staticmethod
     def verify_auth_token(self, auth_token):
         """Verify auth token """
         try:
