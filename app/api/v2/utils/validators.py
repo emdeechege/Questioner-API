@@ -1,7 +1,4 @@
 import re
-from werkzeug.security import check_password_hash
-from app.api.v1.models.auth_models import Users
-from app.api.v1.models.basemodels  import BaseModels, users_list
 
 
 class Validation():
@@ -21,20 +18,3 @@ class Validation():
         """ check that phone number is digit """
         phone = "^[0-9]+$"
         return re.match(phone, phone_number)
-
-    def username_exists(self, username):
-        """ verifies user existence in db"""
-        exists = [user for user in users_list if user['username'] == username]
-
-        if exists:
-            return True
-
-        return False
-
-    def email_exists(self, email):
-        """ check if emails exist"""
-        exists = [user for user in users_list if user['email'] == email]
-        if exists:
-            return True
-
-        return False

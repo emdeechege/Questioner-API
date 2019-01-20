@@ -7,13 +7,12 @@ class Questions(BaseModels):
 
     def __init__(self):
         self.db = 'questions'
-        self.votes = 0
-
-    def post_question(self, postedBy, meetup_id, title, content):
+        
+    def post_question(self, posted_by, meetup_id, title, content):
         """generate new question"""
         new = {
             "question_id": len(QUESTIONS_LIST) + 1,
-            "postedBy": postedBy,
+            "posted_by": posted_by,
             "meetup_id": meetup_id,
             "title": title,
             "content": content,

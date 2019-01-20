@@ -8,18 +8,17 @@ class Meetup(BaseModels):
 
     def __init__(self):
         self.db = 'meetups'
-        self.now = datetime.now().strftime("%H:%M%P %A %d %B %Y"),
 
-    def create_meetup(self, title, createdOn, organizer, images, location, happeningOn, tags):
+    def create_meetup(self, title, organizer, images, location, happening_on, tags):
         """ method to add meetup """
         new = {
             "meetup_id": len(MEETUPS_LIST) + 1,
             "title": title,
             "organizer": organizer,
             "images": images,
-            "createdOn": self.now,
+            "created_on": datetime.now().strftime("%H:%M%P %A %d %B %Y"),
             "location": location,
-            "happeningOn": happeningOn,
+            "happening_on": happening_on,
             "tags": tags
         }
 
@@ -54,5 +53,4 @@ class Rsvp(BaseModels):
         if data:
             self.save_data(new)
             return jsonify(new, {"message": "RSVP successful"}), 201
-        else:
-            return jsonify({"message": "Meetup not found"}), 404
+        return jsonify({"message": "Meetup not found"}), 404
