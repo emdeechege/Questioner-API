@@ -14,8 +14,8 @@ class TestMeetup(unittest.TestCase):
             "organizer": "Andela",
             "images": 'me.jpg',
             "location": "Nairobi",
-            "happeningOn": "02 01 2019 8:00am",
-            "createdOn":  "02 01 2019 5:00pm",
+            "happening_on": "02 01 2019 8:00am",
+            "created_on":  "02 01 2019 5:00pm",
             "tags": ["python", "hackerthon"]
         }
         self.meetup1 = {
@@ -27,15 +27,16 @@ class TestMeetup(unittest.TestCase):
             "response": "Yes"
         }
 
-        self.no = {}
-
     def tearDown(self):
         del self.meetup
+        del self.meetup1
+        del self.rsvp
 
     def test_create_meetup(self):
         res = self.client.post(
             "api/v1/meetups", data=json.dumps(self.meetup), content_type='application/json')
         res_data = json.loads(res.data.decode())
+
         self.assertIn("Meetup added successfully", str(res_data))
         self.assertEqual(res.status_code, 201)
         self.assertIn("Python Hackerthon", str(res_data))
@@ -43,7 +44,7 @@ class TestMeetup(unittest.TestCase):
     def test_submit_empty_meetup_fields(self):
         """check for empty fields"""
         response = self.client.post(
-            'api/v1/meetups', data=json.dumps(self.meetup1),content_type="application/json")
+            'api/v1/meetups', data=json.dumps(self.meetup1), content_type="application/json")
         result = json.loads(response.data)
         self.assertEqual(result["message"],
                          "Please fill in all the required input fields")

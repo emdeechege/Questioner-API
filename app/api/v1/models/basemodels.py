@@ -1,7 +1,8 @@
-users_list = []
-questions_list = []
-meetups_list = []
-rsvp_list = []
+"""all storage and common methods stored here"""
+USERS_LIST = []
+QUESTIONS_LIST = []
+MEETUPS_LIST = []
+RSVP_LIST = []
 
 
 class BaseModels(object):
@@ -11,37 +12,25 @@ class BaseModels(object):
         self.db = db
 
     def check_db(self):
+        """matches db in other models"""
         if self.db == 'user':
-            db = users_list
+            db = USERS_LIST
             return db
         elif self.db == 'questions':
-            db = questions_list
+            db = QUESTIONS_LIST
             return db
         elif self.db == 'meetups':
-            db = meetups_list
+            db = MEETUPS_LIST
             return db
 
         elif self.db == 'rsvp':
-            db = rsvp_list
+            db = RSVP_LIST
             return db
 
     def search_db(self, key, item):
+        """checks for specified items in db"""
         db = self.check_db()
         data = [record for record in db if record[key] == item]
-        if data:
-            return data[0]
-        else:
-            return False
-
-    def search_meetup(self, key, item):
-        data = [record for record in meetups_list if record[key] == item]
-        if data:
-            return data[0]
-        else:
-            return False
-
-    def search_username(self, key, item):
-        data = [record for record in users_list if record[key] == item]
         if data:
             return data[0]
         else:
@@ -53,15 +42,25 @@ class BaseModels(object):
         return data
 
     def save_data(self, new):
+        """ method appends data to relevant lists"""
         db = self.check_db()
         db.append(new)
 
         return db
 
+    def search_meetup(self, key, item):
+        """search for meetup"""
+        data = [record for record in MEETUPS_LIST if record[key] == item]
+        if data:
+            return data[0]
+        else:
+            return False
+
     @classmethod
     def questions_meetups(cls):
-        for meetup in meetups_list:
-            for question in questions_list:
+        """append questions to meetups"""
+        for meetup in MEETUPS_LIST:
+            for question in QUESTIONS_LIST:
                 if meetup["meetup_id"] == question["meetup"]:
-                    meetups = meetups_list.append(question)
+                    meetups = MEETUPS_LIST.append(question)
                     return meetups

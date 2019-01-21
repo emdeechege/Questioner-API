@@ -5,8 +5,8 @@ from ..models.meetups_models import Meetup, Rsvp
 
 v1_meetup_blueprint = Blueprint('meetups', __name__, url_prefix='/api/v1')
 
-meetups = Meetup()
-rsvp = Rsvp()
+MEETUPS = Meetup()
+RSVP = Rsvp()
 
 
 @v1_meetup_blueprint.route('/meetups', methods=['POST'])
@@ -16,21 +16,22 @@ def create_meetup():
     data = request.get_json()
     if not data:
         return jsonify({"message": "Data set cannot be empty"})
-    """ Check for empty inputs"""
-    if not all(field in data for field in ["title", "organizer", "images", "location", "happeningOn", "tags"]):
-        return jsonify({"status": 400, "message": "Please fill in all the required input fields"}), 400
-    """Check for data type"""
+
+    if not all(field in data for field in ["title", "organizer", "images", \
+    "location", "happening_on", "tags"]):
+        return jsonify({"status": 400, \
+        "message": "Please fill in all the required input fields"}), 400
+
 
     title = data.get('title')
-    createdOn = data.get('time')
     organizer = data.get('organizer')
     images = data.get("images")
     location = data.get('location')
-    happeningOn = data.get('happeningOn')
+    happening_on = data.get('happening_on')
     tags = data.get('tags')
 
-    meet = jsonify(meetups.create_meetup(title, createdOn, organizer,
-                                         images, location, happeningOn, tags))
+    meet = jsonify(MEETUPS.create_meetup(title, organizer,
+                                         images, location, happening_on, tags))
     meet.status_code = 201
     return meet
 
@@ -39,11 +40,11 @@ def create_meetup():
 def getall():
     """ endpoint to fetch all meetups """
 
-    data = meetups.getall_meetups()
-    if data:
+    all_meetups = MEETUPS.getall_meetups()
+    if all_meetups:
         return make_response(jsonify({
             "message": "Success",
-            "meetups": data
+            "meetups": all_meetups
         }), 200)
     return make_response(jsonify({'message': 'Meetup not found'}), 404)
 
@@ -51,7 +52,7 @@ def getall():
 @v1_meetup_blueprint.route('/meetups/<int:meetup_id>', methods=['GET'])
 def get_one_meetup(meetup_id):
     """querry meetups by id"""
-    meetup = meetups.getone_meetup(meetup_id)
+    meetup = MEETUPS.getone_meetup(meetup_id)
     if meetup:
         return make_response(jsonify({
             "message": "Success",
@@ -67,13 +68,13 @@ def rsvp_meetup(meetup_id):
     if not data:
         return jsonify({"message": "Data set cannot be empty"}), 400
 
-    meetup = meetups.getone_meetup(meetup_id)
+    meetup = MEETUPS.getone_meetup(meetup_id)
     if meetup:
         user_id = data.get('user_id')
         meetup_id = meetup_id
         response = data.get('response')
 
-        res = rsvp.post_rsvp(user_id, meetup_id, response)
-        
-        return res
+        rsvp = RSVP.post_rsvp(user_id, meetup_id, response)
+
+        return rsvp
     return make_response(jsonify({'message': 'Meetup not found'}), 404)

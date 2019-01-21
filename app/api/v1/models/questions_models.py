@@ -1,5 +1,5 @@
 from flask import jsonify
-from .basemodels import BaseModels, questions_list, meetups_list
+from .basemodels import BaseModels, QUESTIONS_LIST, MEETUPS_LIST
 
 
 class Questions(BaseModels):
@@ -7,23 +7,22 @@ class Questions(BaseModels):
 
     def __init__(self):
         self.db = 'questions'
-        self.votes = 0
 
-    def post_question(self, postedBy, meetup_id, title, content):
+    def post_question(self, posted_by, meetup_id, title, content):
         """generate new question"""
-        new = {
-            "question_id": len(questions_list) + 1,
-            "postedBy": postedBy,
+        new_question = {
+            "question_id": len(QUESTIONS_LIST) + 1,
+            "posted_by": posted_by,
             "meetup_id": meetup_id,
             "title": title,
             "content": content,
             "votes": 0
         }
-        for record in meetups_list:
+        for record in MEETUPS_LIST:
             if record["meetup_id"] == meetup_id:
                 return jsonify({"message": "Meetup does not exist"}), 404
-        self.save_data(new)
-        return jsonify(new, {"message": "Question added successfully"}), 201
+        self.save_data(new_question)
+        return jsonify(new_question, {"message": "Question added successfully"}), 201
 
     def getall_questions(self):
         """method to return all questions"""

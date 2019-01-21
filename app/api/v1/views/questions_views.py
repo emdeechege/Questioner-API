@@ -5,8 +5,8 @@ from ..models.meetups_models import Meetup
 
 v1_question_blueprint = Blueprint('questions', __name__, url_prefix='/api/v1')
 
-questions = Questions()
-meetups = Meetup()
+QUESTIONS = Questions()
+MEETUPS = Meetup()
 
 
 @v1_question_blueprint.route('/questions', methods=['POST'])
@@ -18,15 +18,16 @@ def post_question():
         return jsonify({"message": "Data set cannot be empty"})
 
     if not all(field in data for field in ["title", "content"]):
-        return jsonify({"status": 400, "message": "Please fill in all the required input fields"}), 400
+        return jsonify({"status": 400,\
+         "message": "Please fill in all the required input fields"}), 400
 
-    postedBy = data.get('postedBy')
+    posted_by = data.get('posted_by')
     meetup_id = data.get('meetup_id')
     title = data.get('title')
     content = data.get('content')
 
-    question = questions.post_question(
-        postedBy, meetup_id, title, content)
+    question = QUESTIONS.post_question(
+        posted_by, meetup_id, title, content)
 
     return question
 
@@ -35,17 +36,17 @@ def post_question():
 def get_all_questions():
     """ endpoint to fetch all questions """
 
-    data = questions.getall_questions()
+    all_questions = QUESTIONS.getall_questions()
     return make_response(jsonify({
         "message": "Success",
-        "meetups": data
+        "meetups": all_questions
     }), 200)
 
 
 @v1_question_blueprint.route('/questions/<int:question_id>', methods=['GET'])
 def get_one_question(question_id):
     """ check if question exists"""
-    question = questions.getone_question(question_id)
+    question = QUESTIONS.getone_question(question_id)
     if question:
         return make_response(jsonify({
             'message': 'Success',
@@ -56,7 +57,7 @@ def get_one_question(question_id):
 @v1_question_blueprint.route('/questions/<int:question_id>/upvote', methods=['PATCH'])
 def upvotes(question_id):
     """ verifies question to be upvoted exists"""
-    question = questions.getone_question(question_id)
+    question = QUESTIONS.getone_question(question_id)
     if question:
         upvote = Questions().upvotes(question_id)
         return jsonify({"status": 201, "data": upvote, 'message': 'Question upvoted'})
@@ -66,7 +67,7 @@ def upvotes(question_id):
 @v1_question_blueprint.route('/questions/<int:question_id>/downvote', methods=['PATCH'])
 def downvotes(question_id):
     """ verifies question to be downvoted exists"""
-    question = questions.getone_question(question_id)
+    question = QUESTIONS.getone_question(question_id)
     if question:
         downvote = Questions().downvotes(question_id)
         return jsonify({"status": 201, "data": downvote, 'message': 'Question downvoted'})

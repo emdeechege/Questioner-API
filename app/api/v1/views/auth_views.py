@@ -7,8 +7,8 @@ from ..models.auth_models import Users
 
 v1_auth_blueprint = Blueprint('auth', __name__, url_prefix='/api/v1')
 
-user = Users()
-validator = Validation()
+USER = Users()
+VALIDATOR = Validation()
 
 
 @v1_auth_blueprint.route('/signup', methods=['POST'])
@@ -26,12 +26,11 @@ def signup():
     lastname = data.get('lastname')
     othername = data.get('othername')
     email = data.get('email')
-    phoneNumber = data.get('phoneNumber')
+    phone_number = data.get('phone_number')
     username = data.get('username')
-    isAdmin = data.get('isAdmin')
+    is_admin = data.get('is_admin')
     password = data.get('password')
 
-    """ Check for empty inputs"""
     if not firstname or not firstname.split():
         return make_response(jsonify({
             "status": 400,
@@ -47,10 +46,10 @@ def signup():
             "status": 400,
             "message": "Email is required"
         })), 400
-    if not phoneNumber or not phoneNumber.split():
+    if not phone_number:
         return make_response(jsonify({
             "status": 400,
-            "message": "Phonenumber is required"
+            "message": "Phone number is required"
         })), 400
     if not username or not username.split():
         return make_response(jsonify({
@@ -63,31 +62,31 @@ def signup():
             "message": "Password is required"
         })), 400
 
-    if not validator.validate_phoneNumber(phoneNumber):
+    if not VALIDATOR.validate_phone_number(phone_number):
         return jsonify({
             "status": 400,
             "message": "Please input valid phone number"
         }), 400
 
-    if validator.validate_password(password):
+    if VALIDATOR.validate_password(password):
         return jsonify({
             "status": 400,
             "message": "Password not valid"
         }), 400
 
-    if not validator.validate_email(email):
+    if not VALIDATOR.validate_email(email):
         return jsonify({
             "status": 400,
             "message": "Invalid email"
         }), 400
 
-    if validator.username_exists(username):
+    if VALIDATOR.username_exists(username):
         return jsonify({
             "status": 400,
             "message": "Username exists"
         }), 400
 
-    if validator.email_exists(email):
+    if VALIDATOR.email_exists(email):
         return jsonify({
             "status": 400,
             "message": "Email exists"
@@ -96,8 +95,8 @@ def signup():
     password = generate_password_hash(
         password, method='pbkdf2:sha256', salt_length=8)
 
-    res = user.signup(
-        firstname, lastname, othername, email, phoneNumber, username, isAdmin, password)
+    res = USER.signup(
+        firstname, lastname, othername, email, phone_number, username, is_admin, password)
     return jsonify({
         "status": 201,
         "data": [{
@@ -105,9 +104,9 @@ def signup():
             "lastname": lastname,
             "othername": othername,
             "email": email,
-            "phoneNumber": phoneNumber,
+            "phone_number": phone_number,
             "username": username,
-            "isAdmin": isAdmin
+            "is_admin": is_admin
         }]
     }), 201
 
@@ -137,7 +136,7 @@ def login():
             "message": "Password is required"
         })), 400
 
-    if not validator.username_exists(username):
+    if not VALIDATOR.username_exists(username):
         return jsonify({
             "status": 404,
             "message": "User does not exist"

@@ -26,9 +26,9 @@ def signup():
     lastname = data.get('lastname')
     othername = data.get('othername')
     email = data.get('email')
-    phoneNumber = data.get('phoneNumber')
+    phone_number = data.get('phone_number')
     username = data.get('username')
-    isAdmin = data.get('isAdmin')
+    is_admin = data.get('is_admin')
     password = data.get('password')
 
     """ Check for empty inputs"""
@@ -47,7 +47,7 @@ def signup():
             "status": 400,
             "message": "Email is required"
         })), 400
-    if not phoneNumber or not phoneNumber.split():
+    if not phone_number or not phone_number.split():
         return make_response(jsonify({
             "status": 400,
             "message": "Phonenumber is required"
@@ -63,7 +63,7 @@ def signup():
             "message": "Password is required"
         })), 400
 
-    if not validator.validate_phoneNumber(phoneNumber):
+    if not validator.validate_phone_number(phone_number):
         return jsonify({
             "status": 400,
             "message": "Please input valid phone number"
@@ -97,8 +97,8 @@ def signup():
         password, method='pbkdf2:sha256', salt_length=8)
 
     res = user.signup(
-        firstname, lastname, othername, email, phoneNumber, username, isAdmin, password)
-    return jsonify(res,{
+        firstname, lastname, othername, email, phone_number, username, is_admin, password)
+    return jsonify(res, {
         "status": 201,
         "message": "successfuly registered"
     }), 201

@@ -1,6 +1,6 @@
 from flask import jsonify
 from datetime import datetime
-from .basemodels import BaseModels, meetups_list, rsvp_list
+from .basemodels import BaseModels, MEETUPS_LIST, RSVP_LIST
 
 
 class Meetup(BaseModels):
@@ -8,23 +8,22 @@ class Meetup(BaseModels):
 
     def __init__(self):
         self.db = 'meetups'
-        self.now = datetime.now().strftime("%H:%M%P %A %d %B %Y"),
 
-    def create_meetup(self, title, createdOn, organizer, images, location, happeningOn, tags):
+    def create_meetup(self, title, organizer, images, location, happening_on, tags):
         """ method to add meetup """
-        new = {
-            "meetup_id": len(meetups_list) + 1,
+        new_meetup = {
+            "meetup_id": len(MEETUPS_LIST) + 1,
             "title": title,
             "organizer": organizer,
             "images": images,
-            "createdOn": self.now,
+            "created_on": datetime.now().strftime("%H:%M%P %A %d %B %Y"),
             "location": location,
-            "happeningOn": happeningOn,
+            "happening_on": happening_on,
             "tags": tags
         }
 
-        self.save_data(new)
-        return new, {"message": "Meetup added successfully"}
+        self.save_data(new_meetup)
+        return new_meetup, {"message": "Meetup added successfully"}
 
     def getall_meetups(self):
         """method to get all meetups"""
@@ -43,16 +42,15 @@ class Rsvp(BaseModels):
 
     def post_rsvp(self, user_id, meetup_id, response):
         """ method for rsvp meetup """
-        new = {
-            "rsvp_id": len(rsvp_list) + 1,
+        new_rsvp = {
+            "rsvp_id": len(RSVP_LIST) + 1,
             "user_id": user_id,
             "meetup_id": meetup_id,
             "response": response
         }
-
         data = self.search_meetup("meetup_id", meetup_id)
         if data:
-            self.save_data(new)
-            return jsonify(new, {"message": "RSVP successful"}), 201
+            self.save_data(new_rsvp)
+            return jsonify(new_rsvp, {"message": "RSVP successful"}), 201
         else:
             return jsonify({"message": "Meetup not found"}), 404

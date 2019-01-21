@@ -2,11 +2,11 @@ from flask import jsonify
 import jwt
 from datetime import datetime, timedelta
 from instance.config import Config
-from .basemodels import BaseModels, users_list
+from .basemodels import BaseModels, USERS_LIST
 
 
 SECRET_KEY = Config.SECRET_KEY
-token = {}
+
 
 
 class Users(BaseModels):
@@ -33,28 +33,29 @@ class Users(BaseModels):
         except jwt.InvalidTokenError:
             return 'Invalid token, login'
 
-    def signup(self, firstname, lastname, othername, email, phoneNumber, username, isAdmin, password):
+    def signup(self, firstname, lastname, othername, email, phone_number,\
+     username, is_admin, password):
         """collects and creates signup details"""
         registered = datetime.now()
-        new = {
-            "user_id": len(users_list) + 1,
+        user = {
+            "user_id": len(USERS_LIST) + 1,
             "firstname": firstname,
             "lastname": lastname,
             "othername": othername,
             "email": email,
-            "phoneNumber": phoneNumber,
+            "phone_number": phone_number,
             "username": username,
             "registered": registered,
-            "isAdmin": isAdmin,
+            "is_admin": is_admin,
             "password": password
         }
 
-        self.save_data(new)
-        return new, {"message": "User was created successfully"}
+        self.save_data(user)
+        return user, {"message": "User was created successfully"}
 
     def login(self, username, password):
         """logs in a user"""
-        data = self.search_username("username", username)
+        data = self.search_db("username", username)
         if data:
             if data["password"] == password:
                 return jsonify({"message": "successfully signed-in as {}".format(username)}), 200

@@ -1,10 +1,9 @@
 import re
-from werkzeug.security import check_password_hash
-from app.api.v1.models.auth_models import Users
-from app.api.v1.models.basemodels  import BaseModels, users_list
+from app.api.v1.models.basemodels  import USERS_LIST
 
 
 class Validation():
+    """validates data in other class models"""
     def validate_email(self, email):
         """checks the format of email is standard"""
         expects = "^[\w]+[\d]?@[\w]+\.[\w]+$"
@@ -16,25 +15,24 @@ class Validation():
         expects = "r'(?=(.*[0-9]))((?=.*[A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[$#@]))^.{6,12}$'"
         return re.match(expects, password)
 
-    def validate_phoneNumber(self, phoneNumber):
+    def validate_phone_number(self, phone_number):
         """ check that phone number is digit """
         phone = "^[0-9]+$"
-        return re.match(phone, phoneNumber)
+        return re.match(phone, phone_number)
 
     def username_exists(self, username):
         """ verifies user existence in db"""
-        exists = [user for user in users_list if user['username'] == username]
-        print(users_list)
-        print(username)
+        exists = [user for user in USERS_LIST if user['username'] == username]
+
         if exists:
             return True
-        else:
-            return False
+
+        return False
 
     def email_exists(self, email):
         """ check if emails exist"""
-        exists = [user for user in users_list if user['email'] == email]
+        exists = [user for user in USERS_LIST if user['email'] == email]
         if exists:
             return True
-        else:
-            return False
+
+        return False
