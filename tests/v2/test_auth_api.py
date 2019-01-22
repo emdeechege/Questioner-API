@@ -161,8 +161,8 @@ class TestUser(unittest.TestCase):
         self.assertEqual(result3["status"], 400)
         self.assertEqual(result3["message"], "Password is required")
 
-        def tearDown(self):
-            """This function destroys objests created during the test run"""
+    def tearDown(self):
+        """This function destroys objests created during the test run"""
 
         with self.app.app_context():
             destroy_tests()

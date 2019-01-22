@@ -1,7 +1,12 @@
 import re
+from ....connect import init_db
 
 
 class Validation():
+    def __init__(self):
+        """initialize the user model"""
+        self.db = init_db()
+        
     """contains validation criteria for authorization"""
     def validate_email(self, email):
         """checks the format of email is standard"""
@@ -18,3 +23,19 @@ class Validation():
         """ check that phone number is digit """
         phone = "^[0-9]+$"
         return re.match(phone, phone_number)
+
+    def username_exists(self, username):
+        """ check username exists"""
+
+        curr = self.db.cursor()
+        query = "SELECT username FROM users WHERE username = '%s'" % (username)
+        curr.execute(query)
+        return curr.fetchone() is not None
+
+    def email_exists(self, email):
+        """ check email exists"""
+
+        curr = self.db.cursor()
+        query = "SELECT email FROM users WHERE email = '%s'" % (email)
+        curr.execute(query)
+        return curr.fetchone() is not None

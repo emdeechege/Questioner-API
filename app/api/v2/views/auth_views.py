@@ -98,45 +98,12 @@ def signup():
 
     res = user.signup(
         firstname, lastname, othername, email, phone_number, username, is_admin, password)
-    return jsonify(res, {
-        "status": 201,
-        "message": "successfuly registered"
-    }), 201
 
-
-@v2_auth.route('/login', methods=['POST'])
-def login():
-    """ A view to control users login """
-    try:
-        data = request.get_json()
-    except:
-        return make_response(jsonify({
-            "status": 400,
-            "message": "Wrong input"
-        })), 400
     username = data.get('username')
-    password = data.get('password')
-
-    if not username:
-        return make_response(jsonify({
-            "status": 400,
-            "message": "Username is required"
-        })), 400
-    if not password:
-        return make_response(jsonify({
-            "status": 400,
-            "message": "Password is required"
-        })), 400
-
-    if not validator.username_exists(username):
-        return jsonify({
-            "status": 404,
-            "message": "User does not exist"
-        }), 404
 
     auth_token = user.generate_auth_token(username)
-    return make_response(jsonify({
-        "status": 200,
-        "message": 'Logged in successfuly',
-        "token": auth_token
-    })), 200
+    return jsonify(res, {
+        "status": 201,
+        "token": auth_token,
+        "message": "successfuly registered"
+    }), 201

@@ -6,10 +6,6 @@ from flask import jsonify
 from .basemodels import BaseModels
 from ....connect import init_db
 
-
-
-
-
 class Users(BaseModels):
     """ A class that maps user data """
 
