@@ -24,16 +24,6 @@ class TestUser(unittest.TestCase):
             "username": "Rough",
             "password": "Ch@mp19?yes"
         }
-        self.user4 = {
-            "firstname": "Hunter",
-            "lastname": "Tar",
-            "othername": "Blur",
-            "email": "tam@gmail.com",
-            "phone_number": "1234756789",
-            "is_admin": "False",
-            "username": "Kiboss",
-            "password": "Ch@mp19?no"
-        }
         self.user1 = {
             "firstname": "StandUps"
         }
@@ -120,12 +110,12 @@ class TestUser(unittest.TestCase):
                          "Invalid email")
         self.assertEqual(response.status_code, 400)
 
-    def test_email_exists(self):
+    def test_username_exists(self):
         """username exists"""
         response = self.client.post(
             '/api/v2/signup', data=json.dumps(self.user), content_type="application/json")
         result = json.loads(response.data)
-        self.assertEqual(result["message"], "Email exists")
+        self.assertEqual(result["message"], "Username exists")
         self.assertEqual(response.status_code, 400)
 
     def test_user_login(self):
