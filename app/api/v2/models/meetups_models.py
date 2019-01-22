@@ -10,7 +10,7 @@ class Meetup(BaseModels):
     def __init__(self):
         self.db = init_db()
 
-    def create_meetup(self, title, organizer, images, location, happening_on, tags):
+    def create_meetup(self, title=None, organizer=None, images=None, location=None, happening_on=None, tags=None):
         """ method to add meetup """
         new_meetup = {
             "title": title,
@@ -25,11 +25,10 @@ class Meetup(BaseModels):
         cursor = self.db.cursor()
         add_meetup = """INSERT INTO meetups (title, organizer,\
          images, location, happening_on, tags)\
-          VALUES (%(title)s, %(organizer)s, %(location)s, \
-          %(happening_onl)s, %(tag)s) RETURNING meetup_id"""
+          VALUES (%(title)s, %(organizer)s, %(images)s, %(location)s, \
+          %(happening_on)s, %(tags)s) RETURNING *"""
 
         cursor.execute(add_meetup, new_meetup)
-        meetup_id = cursor.fetchone()[0]
         self.db.commit()
         cursor.close()
-        return int(meetup_id)
+        return new_meetup
