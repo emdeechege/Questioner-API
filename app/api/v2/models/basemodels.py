@@ -27,15 +27,8 @@ class BaseModels(object):
             return True
 
 
-    def check_exists(self, username):
-        """Check if the records exist"""
-        curr = self.db.cursor()
-        query = "SELECT username FROM users WHERE username = '%s'" % (username)
-        curr.execute(query)
-        return curr.fetchone() is not None
-
     @staticmethod
-    def generate_auth_token(self, username):
+    def generate_auth_token(username):
         """ Generate auth token """
         try:
             payload = {'exp': datetime.utcnow() + timedelta(days=0, seconds=180),
@@ -45,7 +38,7 @@ class BaseModels(object):
             return e
 
     @staticmethod
-    def verify_auth_token(self, auth_token):
+    def verify_auth_token(auth_token):
         """Verify auth token """
         try:
             payload = jwt.decode(auth_token, SECRET_KEY)
