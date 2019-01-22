@@ -107,3 +107,55 @@ def signup():
         "token": auth_token,
         "message": "successfuly registered"
     }), 201
+
+@v2_auth.route('/login', methods=['POST'])
+def login():
+    """ A view to control users login """
+    try:
+        data = request.get_json()
+
+    except:
+        return make_response(jsonify({
+            "status": 400,
+            "message": "Wrong input"
+        })), 400
+    username = data.get('username')
+    password = data.get('password')
+
+    if not username:
+        return make_response(jsonify({
+            "status": 400,
+            "message": "Username is required"
+        })), 400
+    if not password:
+        return make_response(jsonify({
+            "status": 400,
+            "message": "Password is required"
+        })), 400
+
+    if not validator.username_exists(username):
+        return jsonify({
+            "status": 404,
+            "message": "User does not exist"
+        }), 404
+
+    curr = user.db.cursor()
+    login_query = "SELECT * FROM users WHERE username = '%s'" % (
+        username)
+    curr.execute(login_query)
+    record = curr.fetchall()
+
+    for user_data in record:
+        found_password = user_data[7]
+        found_username = user_data[6]
+        if found_username:
+            if check_password_hash(found_password, password):
+                access_token = user.generate_auth_token(username)
+                return jsonify({"Message": "User logged in successfully",\
+                 "status": 200, \
+                 "data": [{"token": access_token,\
+                  "Welcome back": found_username}]}), 200
+            return jsonify({
+                "status": 404,
+                "message": "Please input valid credentials"
+            }), 404
