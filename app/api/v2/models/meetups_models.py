@@ -73,16 +73,17 @@ class Rsvp(BaseModels):
     def post_rsvp(self, user_id, meetup_id, response):
         """ method for rsvp meetup """
         new_rsvp = {
+            "meetup_id": meetup_id,
             "user_id": user_id,
             "response": response
         }
-        cursor = self.db.cursor(cursor_factory=RealDictCursor)
+        cursor = self.db.cursor()
         fetch = """SELECT * FROM meetups where meetup_id = %s"""
         cursor.execute(fetch, (meetup_id, ))
         one_meetup = cursor.fetchone()
         if one_meetup:
 
             sql = """INSERT INTO rsvp (meetup_id, user_id, response)
-                 VALUES( %(user_id)s, %(meetup_id)s, %(response)s) RETURNING rsvp_id"""
+                 VALUES(%(meetup_id)s, %(user_id)s, %(response)s) RETURNING rsvp_id"""
             cursor.execute(sql, new_rsvp)
             return new_rsvp
