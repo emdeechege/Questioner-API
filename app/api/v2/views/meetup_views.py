@@ -36,3 +36,15 @@ def create_meetup():
         "status": 201,
         "message": "Meetup added successfuly"
     }), 201
+
+@v2_meetup.route('/meetups', methods=['GET'])
+def getall():
+    """ endpoint to fetch all meetups """
+
+    all_meetups = MEETUPS.getall_meetups()
+    if all_meetups:
+        return make_response(jsonify({
+            "message": "Success",
+            "meetups": all_meetups
+        }), 200)
+    return make_response(jsonify({'message': 'Meetup not found'}), 404)

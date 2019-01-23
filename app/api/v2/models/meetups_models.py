@@ -32,3 +32,19 @@ class Meetup(BaseModels):
         self.db.commit()
         cursor.close()
         return new_meetup
+
+    def getall_meetups(self):
+        ''' method to fetch all the posted meetups '''
+        cursor = self.db.cursor()
+        fetch = "SELECT * FROM meetups"
+        cursor.execute(fetch)
+        meetups = cursor.fetchall()
+        cursor.close()
+        return meetups
+
+    def getone_meetup(self, meetup_id):
+        ''' method to get specific meetup based on its id '''
+        fetch = """select * from meetups where meetup_id = %s"""
+        self.db.cursor.execute(fetch, (meetup_id, ))
+        one_meetup = self.db.cursor.fetchone()
+        return one_meetup
