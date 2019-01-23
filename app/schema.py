@@ -40,7 +40,7 @@ def tables():
     );"""
 
     rsvp = """CREATE TABLE IF NOT EXISTS rsvp(
-        id serial PRIMARY KEY NOT NULL,
+        rsvp_id serial PRIMARY KEY NOT NULL,
         meetup_id numeric NOT NULL,
         user_id numeric NOT NULL,
         response character varying(30) NOT NULL

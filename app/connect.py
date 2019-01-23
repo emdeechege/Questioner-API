@@ -2,9 +2,6 @@ import os
 import psycopg2
 
 from app import schema
-from instance.config import Config
-
-
 
 def init_db():
     """ setup database connection"""
@@ -18,10 +15,6 @@ def init_db():
     conn.commit()
     return conn
 
-def connect():
-    conn = psycopg2.connect("dbname=questioner user=emdee password=arif@123")
-    return conn
-
 def test_init_db():
     """set up db testing environment"""
 
@@ -33,6 +26,7 @@ def test_init_db():
         curr.execute(query)
     conn.commit()
     return conn
+
 
 def destroy():
     """Drops tables on request"""
