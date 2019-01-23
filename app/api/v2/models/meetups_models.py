@@ -10,7 +10,8 @@ class Meetup(BaseModels):
     def __init__(self):
         self.db = init_db()
 
-    def create_meetup(self, title=None, organizer=None, images=None, location=None, happening_on=None, tags=None):
+    def create_meetup(self, title=None, organizer=None, images=None,\
+     location=None, happening_on=None, tags=None):
         """ method to add meetup """
         new_meetup = {
             "title": title,
@@ -44,7 +45,8 @@ class Meetup(BaseModels):
 
     def getone_meetup(self, meetup_id):
         ''' method to get specific meetup based on its id '''
-        fetch = """select * from meetups where meetup_id = %s"""
-        self.db.cursor.execute(fetch, (meetup_id, ))
-        one_meetup = self.db.cursor.fetchone()
+        cursor = self.db.cursor()
+        fetch = """SELECT * FROM meetups where meetup_id = %s"""
+        cursor.execute(fetch, (meetup_id, ))
+        one_meetup = cursor.fetchone()
         return one_meetup

@@ -48,3 +48,14 @@ def getall():
             "meetups": all_meetups
         }), 200)
     return make_response(jsonify({'message': 'Meetup not found'}), 404)
+
+@v2_meetup.route('/meetups/<int:meetup_id>', methods=['GET'])
+def get_one_meetup(meetup_id):
+    """querry meetups by id"""
+    meetup = MEETUPS.getone_meetup(meetup_id)
+    if meetup:
+        return make_response(jsonify({
+            "message": "Success",
+            "meetup": meetup
+        })), 200
+    return make_response(jsonify({'message': 'Meetup not found'}), 404)
