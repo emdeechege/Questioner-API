@@ -1,5 +1,4 @@
 from flask import jsonify, Blueprint, request, json, make_response
-from datetime import datetime
 from ..models.meetups_models import Meetup, Rsvp
 
 
