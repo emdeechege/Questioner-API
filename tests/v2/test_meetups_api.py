@@ -80,6 +80,23 @@ class TestMeetup(unittest.TestCase):
         resp = json.loads(resp.data)
         self.assertEqual(resp['Message'], "Meetup 1 has been deleted!")
 
+    def test_rsvp_meetup(self):
+        """test for rsvp"""
+        response = self.client.post(
+            "api/v2/meetups/1/rsvp", data=json.dumps(self.rsvp), content_type='application/json')
+        res = json.loads(response.data.decode())
+        self.assertIn("RSVP successful", str(res))
+        self.assertEqual(response.status_code, 201)
+        self.assertIn("Yes", str(res))
+
+    def test_rsvp_no_meetup(self):
+        """test for rsvp"""
+        response = self.client.post("api/v2/meetups/6/rsvp",
+                                    data=json.dumps(self.rsvp), content_type='application/json')
+        res = json.loads(response.data.decode())
+        self.assertEqual(res["message"], "Meetup not found")
+        self.assertEqual(response.status_code, 404)
+
     def tear_down(self):
         """This function destroys objests created during the test run"""
         destroy_tests()
