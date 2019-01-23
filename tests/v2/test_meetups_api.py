@@ -4,6 +4,7 @@ from app import create_app
 
 from app.connect import test_init_db, destroy_tests
 
+
 class TestMeetup(unittest.TestCase):
     """Test meetup class"""
 
@@ -11,6 +12,7 @@ class TestMeetup(unittest.TestCase):
         """setup method for tests"""
         self.app = create_app(config_name='testing')
         self.client = self.app.test_client()
+        self.db = test_init_db()
 
         self.meetup = {
             "title": "Python Hackerthon",
@@ -25,15 +27,6 @@ class TestMeetup(unittest.TestCase):
             "title": "Python Hackerthon"
         }
 
-        with self.app.app_context():
-            self.db = test_init_db()
-
-    def tear_down(self):
-        """This function destroys objests created during the test run"""
-        with self.app.app_context():
-            destroy_tests()
-            self.db.close()
-
     def test_create_meetup(self):
         """creates new meetup"""
         res = self.client.post(
@@ -42,7 +35,6 @@ class TestMeetup(unittest.TestCase):
 
         self.assertEqual(res.status_code, 201)
         self.assertIn("Python Hackerthon", str(res_data))
-
 
     def test_submit_empty_meetup_fields(self):
         """check for empty fields"""
@@ -77,7 +69,38 @@ class TestMeetup(unittest.TestCase):
         self.assertEqual(res["message"], "Meetup not found")
         self.assertEqual(response.status_code, 404)
 
+    def test_delete_meetups(self):
+        """deletes meetup"""
+        resp = self.client.post(
+            '/api/v2/meetups', data=json.dumps(self.meetup), content_type='application/json')
+        self.assertEqual(resp.status_code, 201)
+        resp = self.client.delete(
+            '/api/v2/meetups/1/delete', content_type='application/json')
+        self.assertEqual(resp.status_code, 200)
+        resp = json.loads(resp.data)
+        self.assertEqual(resp['Message'], "Meetup 1 has been deleted!")
 
+    def test_rsvp_meetup(self):
+        """test for rsvp"""
+        response = self.client.post(
+            "api/v2/meetups/1/rsvp", data=json.dumps(self.rsvp), content_type='application/json')
+        res = json.loads(response.data.decode())
+        self.assertIn("RSVP successful", str(res))
+        self.assertEqual(response.status_code, 201)
+        self.assertIn("Yes", str(res))
+
+    def test_rsvp_no_meetup(self):
+        """test for rsvp"""
+        response = self.client.post("api/v2/meetups/6/rsvp",
+                                    data=json.dumps(self.rsvp), content_type='application/json')
+        res = json.loads(response.data.decode())
+        self.assertEqual(res["message"], "Meetup not found")
+        self.assertEqual(response.status_code, 404)
+
+    def tear_down(self):
+        """This function destroys objests created during the test run"""
+        destroy_tests()
+        self.db.close()
 
 
 if __name__ == '__main__':

@@ -1,12 +1,11 @@
 from flask import jsonify, Blueprint, request, json, make_response
-from datetime import datetime
-from ..models.meetups_models import Meetup
+from ..models.meetups_models import Meetup, Rsvp
 
 
 v2_meetup = Blueprint('meetup', __name__, url_prefix='/api/v2')
 
 MEETUPS = Meetup()
-
+RSVP = Rsvp()
 
 
 @v2_meetup.route('/meetups', methods=['POST'])
@@ -58,4 +57,34 @@ def get_one_meetup(meetup_id):
             "message": "Success",
             "meetup": meetup
         })), 200
+    return make_response(jsonify({'message': 'Meetup not found'}), 404)
+
+@v2_meetup.route('/meetups/<int:meetup_id>/delete', methods=['DELETE'])
+def delete(meetup_id):
+    """deletes meetup by id"""
+    one_meet = MEETUPS.getone_meetup(meetup_id)
+    if one_meet:
+        MEETUPS.delete_meetup(one_meet)
+        return make_response(jsonify({"status": 200,\
+         "Message": "Meetup {} has been deleted!"\
+         .format(meetup_id)}), 200)
+    return make_response(jsonify({'message': 'Meetup not found'}), 404)
+
+@v2_meetup.route('/meetups/<int:meetup_id>/rsvp', methods=['POST'])
+def rsvp_meetup(meetup_id):
+    """ endpoint for rsvp meetup """
+    data = request.get_json()
+    if not data:
+        return jsonify({"message": "Data set cannot be empty"}), 400
+
+    meetup = MEETUPS.getone_meetup(meetup_id)
+    if meetup:
+        user_id = data.get('user_id')
+        meetup_id = meetup_id
+        response = data.get('response')
+
+
+        rsvp = RSVP.post_rsvp(user_id, meetup_id, response)
+
+        return jsonify(rsvp, {"message": "RSVP successful"}), 201
     return make_response(jsonify({'message': 'Meetup not found'}), 404)

@@ -1,4 +1,3 @@
-from flask import jsonify
 from datetime import datetime
 from psycopg2.extras import RealDictCursor
 from .basemodels import BaseModels
@@ -6,14 +5,15 @@ from .basemodels import BaseModels
 
 from ....connect import init_db
 
+
 class Meetup(BaseModels):
     """ Creates the meetup record model """
 
     def __init__(self):
         self.db = init_db()
 
-    def create_meetup(self, title=None, organizer=None, images=None,\
-     location=None, happening_on=None, tags=None):
+    def create_meetup(self, title=None, organizer=None, images=None,
+                      location=None, happening_on=None, tags=None):
         """ method to add meetup """
         new_meetup = {
             "title": title,
@@ -51,4 +51,38 @@ class Meetup(BaseModels):
         fetch = """SELECT * FROM meetups where meetup_id = %s"""
         cursor.execute(fetch, (meetup_id, ))
         one_meetup = cursor.fetchone()
+        cursor.close()
         return one_meetup
+
+    def delete_meetup(self, meetup_id):
+        """This methods deletes a meetup from the db based on the its meetup_id number."""
+        cursor = self.db.cursor(cursor_factory=RealDictCursor)
+        delete = """DELETE FROM meetups WHERE meetup_id = %s"""
+        cursor.execute(delete, (meetup_id, ))
+        self.db.commit()
+        return {"status": 200, "Message": "Meetup deleted"}
+
+
+class Rsvp(BaseModels):
+    """ Creates the RSVP record model """
+
+    def __init__(self):
+        self.db = init_db()
+
+    def post_rsvp(self, user_id, meetup_id, response):
+        """ method for rsvp meetup """
+        new_rsvp = {
+            "meetup_id": meetup_id,
+            "user_id": user_id,
+            "response": response
+        }
+        cursor = self.db.cursor()
+        fetch = """SELECT * FROM meetups where meetup_id = %s"""
+        cursor.execute(fetch, (meetup_id, ))
+        one_meetup = cursor.fetchone()
+        if one_meetup:
+
+            sql = """INSERT INTO rsvp (meetup_id, user_id, response)
+                 VALUES(%(meetup_id)s, %(user_id)s, %(response)s) RETURNING rsvp_id"""
+            cursor.execute(sql, new_rsvp)
+            return new_rsvp
