@@ -62,10 +62,13 @@ def get_one_meetup(meetup_id):
 @v2_meetup.route('/meetups/<int:meetup_id>/delete', methods=['DELETE'])
 def delete(meetup_id):
     """deletes meetup by id"""
-    MEETUPS.delete_meetup(meetup_id)
-    return make_response(jsonify({"status": 200,\
-     "Message": "Meetup {} has been deleted!"\
-     .format(meetup_id)}), 200)
+    one_meet = MEETUPS.getone_meetup(meetup_id)
+    if one_meet:
+        MEETUPS.delete_meetup(one_meet)
+        return make_response(jsonify({"status": 200,\
+         "Message": "Meetup {} has been deleted!"\
+         .format(meetup_id)}), 200)
+    return make_response(jsonify({'message': 'Meetup not found'}), 404)
 
 @v2_meetup.route('/meetups/<int:meetup_id>/rsvp', methods=['POST'])
 def rsvp_meetup(meetup_id):
