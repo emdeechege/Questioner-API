@@ -29,7 +29,7 @@ class Users(BaseModels):
             "password": password
         }
 
-        cursor = self.db .cursor()
+        cursor = self.db.cursor()
         query = """INSERT INTO users (firstname, lastname,\
          othername, email, phone_number, username, is_admin, password) \
         VALUES (%(firstname)s, %(lastname)s, %(othername)s, %(email)s, %(phone_number)s, %(username)s, \

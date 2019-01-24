@@ -47,22 +47,20 @@ class Questions(BaseModels):
     def getone_question(self, question_id):
         """method to get one question"""
         cursor = self.db.cursor(cursor_factory=RealDictCursor)
-        fetch = """SELECT * FROM questions where meetup_id = %s"""
-        cursor.execute(fetch, (meetup_id, ))
+        fetch = """SELECT * FROM questions where question_id = %s"""
+        cursor.execute(fetch, (question_id, ))
         one_question = cursor.fetchone()
         cursor.close()
         return one_question
 
     def upvotes(self, question_id):
         """ search question by id and increasse vote by one"""
-        qtn = self.search_db("question_id", question_id)
-        if qtn['question_id'] == question_id:
-            qtn['votes'] = qtn['votes'] + 1
-            return qtn
+        qtn = one_question
+        qtn['votes'] = qtn['votes'] + 1
+        return qtn
 
     def downvotes(self, question_id):
         """ search question by id and reduce votes by one"""
-        qtn = self.search_db("question_id", question_id)
-        if qtn['question_id'] == question_id:
-            qtn['votes'] = qtn['votes'] - 1
-            return qtn
+        qtn = get_one_question(question_id)
+        qtn['votes'] = qtn['votes'] - 1
+        return qtn

@@ -13,6 +13,7 @@ class TestUser(unittest.TestCase):
 
         self.app = create_app(config_name='testing')
         self.client = self.app.test_client()
+        self.db = test_init_db()
 
         self.user = {
             "firstname": "StandUps",
@@ -77,8 +78,7 @@ class TestUser(unittest.TestCase):
             "username": "Kijana",
             "password": "nnmmiiijjjjuu"
         }
-        with self.app.app_context():
-            self.db = test_init_db()
+
 
     def test_user_signup(self):
         """ Test signup user """

@@ -39,7 +39,8 @@ def post_question(meetup_id,current_user):
     return make_response(jsonify({'message': 'Meetup not found'}), 404)
 
 
-@v2_question.route('/QUESTIONS', methods=['GET'])
+@v2_question.route('/questions', methods=['GET'])
+@login_required
 def getall():
     """ endpoint to fetch all questions """
 
@@ -51,6 +52,7 @@ def getall():
 
 
 @v2_question.route('/questions/<int:question_id>', methods=['GET'])
+@login_required
 def get_one_question(question_id):
     """ check if question exists"""
     question = QUESTIONS.getone_question(question_id)
@@ -62,6 +64,7 @@ def get_one_question(question_id):
 
 
 @v2_question.route('/questions/<int:question_id>/upvote', methods=['PATCH'])
+@login_required
 def upvotes(question_id):
     """ verifies question to be upvoted exists"""
     question = QUESTIONS.getone_question(question_id)
@@ -72,6 +75,7 @@ def upvotes(question_id):
 
 
 @v2_question.route('/questions/<int:question_id>/downvote', methods=['PATCH'])
+@login_required
 def downvotes(question_id):
     """ verifies question to be downvoted exists"""
     question = QUESTIONS.getone_question(question_id)
