@@ -110,14 +110,14 @@ class TestUser(unittest.TestCase):
                          "Invalid email")
         self.assertEqual(response.status_code, 400)
 
-    def test_username_exists(self):
-        """username exists"""
-        response = self.client.post(
-            '/api/v2/signup', data=json.dumps(self.user), content_type="application/json")
-        result = json.loads(response.data)
-        self.assertEqual(result["message"], "Username exists")
-        self.assertEqual(response.status_code, 400)
-    # 
+    # def test_username_exists(self):
+    #     """username exists"""
+    #     response = self.client.post(
+    #         '/api/v2/signup', data=json.dumps(self.user), content_type="application/json")
+    #     result = json.loads(response.data)
+    #     self.assertEqual(result["message"], "Username exists")
+    #     self.assertEqual(response.status_code, 400)
+    #
     # def test_user_login(self):
     #     """ Test login user """
     #     check_login = self.client.post(
