@@ -65,7 +65,7 @@ def login_required(f):
         user = payload['username']
 
         if user:
-            return f(*args, **kwargs)
+            return f(current_user=user, *args, **kwargs)
         return jsonify({
             "status": 404,
             "error": "User not found"
@@ -99,7 +99,7 @@ def admin_required(f):
 
         if user:
             if is_admin == 'True':
-                return f(*args, **kwargs)
+                return f(*args, **kwargs, current_user=user)
         return jsonify({
             "status": 403,
             "error": "You are not authorized to access this page"
