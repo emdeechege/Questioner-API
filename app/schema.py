@@ -31,10 +31,9 @@ def tables():
     questions = """CREATE TABLE IF NOT EXISTS questions(
         question_id serial PRIMARY KEY NOT NULL,
         meetup_id numeric NOT NULL,
-        user_id numeric NOT NULL,
-        posted_by numeric NOT NULL,
+        posted_by text NOT NULL,
         title character varying(200) NOT NULL,
-        body text NOT NULL,
+        content text NOT NULL,
         votes integer DEFAULT 0,
         createdOn timestamp with time zone DEFAULT ('now'::text)::date NOT NULL
     );"""

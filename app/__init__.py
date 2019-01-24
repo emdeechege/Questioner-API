@@ -8,6 +8,7 @@ from .api.v1.views.questions_views import v1_question_blueprint
 from .api.v1.views.auth_views import v1_auth_blueprint
 from .api.v2.views.auth_views import v2_auth
 from .api.v2.views.meetup_views import v2_meetup
+from .api.v2.views.questions_views import v2_question
 
 
 def create_app(config_name):
@@ -24,6 +25,7 @@ def create_app(config_name):
 
     app.register_blueprint(v2_auth)
     app.register_blueprint(v2_meetup)
+    app.register_blueprint(v2_question)
 
 
     return app
