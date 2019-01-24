@@ -1,3 +1,4 @@
+import json
 from flask import jsonify, Blueprint, request, make_response
 from ..models.questions_models import Questions
 from ..models.meetups_models import Meetup
@@ -37,49 +38,3 @@ def post_question(meetup_id,current_user):
             "message": "Question added successfuly"
         }), 201
     return make_response(jsonify({'message': 'Meetup not found'}), 404)
-
-
-@v2_question.route('/questions', methods=['GET'])
-@login_required
-def getall():
-    """ endpoint to fetch all questions """
-
-    data = QUESTIONS.getall_questions()
-    return make_response(jsonify({
-        "message": "Success",
-        "meetups": data
-    }), 200)
-
-
-@v2_question.route('/questions/<int:question_id>', methods=['GET'])
-@login_required
-def get_one_question(question_id):
-    """ check if question exists"""
-    question = QUESTIONS.getone_question(question_id)
-    if question:
-        return make_response(jsonify({
-            'message': 'Success',
-            'question': question}), 200)
-    return make_response(jsonify({'message': 'question not found'}), 404)
-
-
-@v2_question.route('/questions/<int:question_id>/upvote', methods=['PATCH'])
-@login_required
-def upvotes(question_id):
-    """ verifies question to be upvoted exists"""
-    question = QUESTIONS.getone_question(question_id)
-    if question:
-        upvote = Questions().upvotes(question_id)
-        return jsonify({"status": 201, "data": upvote, 'message': 'Question upvoted'})
-    return make_response(jsonify({'message': 'question not found'}), 404)
-
-
-@v2_question.route('/questions/<int:question_id>/downvote', methods=['PATCH'])
-@login_required
-def downvotes(question_id):
-    """ verifies question to be downvoted exists"""
-    question = QUESTIONS.getone_question(question_id)
-    if question:
-        downvote = Questions().downvotes(question_id)
-        return jsonify({"status": 201, "data": downvote, 'message': 'Question downvoted'})
-    return make_response(jsonify({'message': 'question not found'}), 404)

@@ -1,3 +1,4 @@
+import json
 from flask import jsonify
 from psycopg2.extras import RealDictCursor
 from .basemodels import BaseModels
@@ -33,34 +34,3 @@ class Questions(BaseModels):
             self.db.commit()
             cursor.close()
             return new_question
-
-
-    def getall_questions(self):
-        """method to return all questions"""
-        cursor = self.db.cursor(cursor_factory=RealDictCursor)
-        fetch = "SELECT * FROM questions ORDER BY votes"
-        cursor.execute(fetch)
-        questions = cursor.fetchall()
-        cursor.close()
-        return questions
-
-    def getone_question(self, question_id):
-        """method to get one question"""
-        cursor = self.db.cursor(cursor_factory=RealDictCursor)
-        fetch = """SELECT * FROM questions where question_id = %s"""
-        cursor.execute(fetch, (question_id, ))
-        one_question = cursor.fetchone()
-        cursor.close()
-        return one_question
-
-    def upvotes(self, question_id):
-        """ search question by id and increasse vote by one"""
-        qtn = one_question
-        qtn['votes'] = qtn['votes'] + 1
-        return qtn
-
-    def downvotes(self, question_id):
-        """ search question by id and reduce votes by one"""
-        qtn = get_one_question(question_id)
-        qtn['votes'] = qtn['votes'] - 1
-        return qtn

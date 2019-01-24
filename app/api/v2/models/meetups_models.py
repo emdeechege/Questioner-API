@@ -56,7 +56,7 @@ class Meetup(BaseModels):
 
     def delete_meetup(self, meetup_id):
         """This methods deletes a meetup from the db based on the its meetup_id number."""
-        cursor = self.db.cursor(cursor_factory=RealDictCursor)
+        cursor = self.db.cursor()
         delete = """DELETE FROM meetups WHERE meetup_id = %s"""
         cursor.execute(delete, (meetup_id, ))
         self.db.commit()

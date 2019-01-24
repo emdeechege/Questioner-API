@@ -93,7 +93,7 @@ def admin_required(f):
             user = payload['username']
             is_admin = payload['is_admin']
             if user:
-                if is_admin is 'True':
+                if is_admin == 'True':
                     return f(current_user=user, *args, **kwargs)
                 return jsonify({"status": 401, "error": "You are not an admin user"}), 401
             return jsonify({"status": 404, "error": "User not found"}), 404
