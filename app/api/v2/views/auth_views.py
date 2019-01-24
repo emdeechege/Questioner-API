@@ -100,8 +100,9 @@ def signup():
         firstname, lastname, othername, email, phone_number, username, is_admin, password)
 
     username = data.get('username')
+    is_admin = data.get('is_admin')
 
-    auth_token = user.generate_auth_token(username)
+    auth_token = user.generate_auth_token(username, is_admin)
     return jsonify(res, {
         "status": 201,
         "token": auth_token,
@@ -148,9 +149,10 @@ def login():
     for user_data in record:
         found_password = user_data[7]
         found_username = user_data[6]
+        is_admin = user_data[8]
         if found_username:
             if check_password_hash(found_password, password):
-                access_token = user.generate_auth_token(username)
+                access_token = user.generate_auth_token(username, is_admin)
                 return jsonify({"Message": "User logged in successfully",\
                  "status": 200, \
                  "data": [{"token": access_token,\
