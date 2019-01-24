@@ -27,6 +27,11 @@ class TestMeetup(unittest.TestCase):
             "title": "Python Hackerthon"
         }
 
+        self.rsvp = {
+            "user_id": "1",
+            "response": "Yes"
+        }
+
     def test_create_meetup(self):
         """creates new meetup"""
         res = self.client.post(

@@ -1,6 +1,6 @@
 from flask import jsonify, Blueprint, request, json, make_response
 from ..models.meetups_models import Meetup, Rsvp
-
+from ..models.basemodels import login_required, admin_required
 
 v2_meetup = Blueprint('meetup', __name__, url_prefix='/api/v2')
 
@@ -9,6 +9,7 @@ RSVP = Rsvp()
 
 
 @v2_meetup.route('/meetups', methods=['POST'])
+@admin_required
 def create_meetup():
     """ endpoint for creating meetup"""
 
@@ -37,6 +38,7 @@ def create_meetup():
     }), 201
 
 @v2_meetup.route('/meetups', methods=['GET'])
+@login_required
 def getall():
     """ endpoint to fetch all meetups """
 
@@ -49,6 +51,7 @@ def getall():
     return make_response(jsonify({'message': 'Meetup not found'}), 404)
 
 @v2_meetup.route('/meetups/<int:meetup_id>', methods=['GET'])
+@login_required
 def get_one_meetup(meetup_id):
     """querry meetups by id"""
     meetup = MEETUPS.getone_meetup(meetup_id)
@@ -60,6 +63,7 @@ def get_one_meetup(meetup_id):
     return make_response(jsonify({'message': 'Meetup not found'}), 404)
 
 @v2_meetup.route('/meetups/<int:meetup_id>/delete', methods=['DELETE'])
+@admin_required
 def delete(meetup_id):
     """deletes meetup by id"""
     one_meet = MEETUPS.getone_meetup(meetup_id)
@@ -71,6 +75,7 @@ def delete(meetup_id):
     return make_response(jsonify({'message': 'Meetup not found'}), 404)
 
 @v2_meetup.route('/meetups/<int:meetup_id>/rsvp', methods=['POST'])
+@login_required
 def rsvp_meetup(meetup_id):
     """ endpoint for rsvp meetup """
     data = request.get_json()
