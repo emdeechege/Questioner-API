@@ -10,7 +10,7 @@ RSVP = Rsvp()
 
 @v2_meetup.route('/meetups', methods=['POST'])
 @admin_required
-def create_meetup():
+def create_meetup(current_user):
     """ endpoint for creating meetup"""
 
     data = request.get_json()
@@ -39,7 +39,7 @@ def create_meetup():
 
 @v2_meetup.route('/meetups', methods=['GET'])
 @login_required
-def getall():
+def getall(current_user):
     """ endpoint to fetch all meetups """
 
     all_meetups = MEETUPS.getall_meetups()
@@ -52,7 +52,7 @@ def getall():
 
 @v2_meetup.route('/meetups/<int:meetup_id>', methods=['GET'])
 @login_required
-def get_one_meetup(meetup_id):
+def get_one_meetup(current_user,meetup_id):
     """querry meetups by id"""
     meetup = MEETUPS.getone_meetup(meetup_id)
     if meetup:
@@ -64,7 +64,7 @@ def get_one_meetup(meetup_id):
 
 @v2_meetup.route('/meetups/<int:meetup_id>/delete', methods=['DELETE'])
 @admin_required
-def delete(meetup_id):
+def delete(current_user, meetup_id):
     """deletes meetup by id"""
     one_meet = MEETUPS.getone_meetup(meetup_id)
     if one_meet:
@@ -72,24 +72,24 @@ def delete(meetup_id):
         return make_response(jsonify({"status": 200,\
          "Message": "Meetup {} has been deleted!"\
          .format(meetup_id)}), 200)
-    return make_response(jsonify({'message': 'Meetup not found'}), 404)
+    return make_response(jsonify({"status": 404, 'message': 'Meetup not found'}), 404)
 
 @v2_meetup.route('/meetups/<int:meetup_id>/rsvp', methods=['POST'])
 @login_required
-def rsvp_meetup(meetup_id):
+def rsvp_meetup(current_user, meetup_id):
     """ endpoint for rsvp meetup """
     data = request.get_json()
     if not data:
-        return jsonify({"message": "Data set cannot be empty"}), 400
+        return jsonify({"status": 400, "message": "Data set cannot be empty"}), 400
 
     meetup = MEETUPS.getone_meetup(meetup_id)
     if meetup:
-        user_id = data.get('user_id')
+        username = data.get('username')
         meetup_id = meetup_id
         response = data.get('response')
 
 
-        rsvp = RSVP.post_rsvp(user_id, meetup_id, response)
+        rsvp = RSVP.post_rsvp(username, meetup_id, response)
 
-        return jsonify(rsvp, {"message": "RSVP successful"}), 201
-    return make_response(jsonify({'message': 'Meetup not found'}), 404)
+        return jsonify(rsvp, {"status": 201, "message": "RSVP successful"}), 201
+    return make_response(jsonify({"status": 404, 'message': 'Meetup not found'}), 404)

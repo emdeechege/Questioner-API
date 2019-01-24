@@ -1,8 +1,10 @@
 import jwt
+from flask import current_app
 from functools import wraps
 from datetime import datetime, timedelta
 from flask import jsonify, make_response, request
 from instance.config import Config
+
 
 
 from app.connect import init_db
@@ -32,7 +34,7 @@ class BaseModels(object):
     def generate_auth_token(username, is_admin):
         """ Generate auth token """
         try:
-            payload = {'exp': datetime.utcnow() + timedelta(days=0, seconds=300),
+            payload = {'exp': datetime.utcnow() + timedelta(days=1, seconds=300),
                        'iat': datetime.utcnow(),
                        'username': username,
                        'is_admin': is_admin}
@@ -65,7 +67,7 @@ def login_required(f):
         user = payload['username']
 
         if user:
-            return f(*args, **kwargs)
+            return f(current_user=user, *args, **kwargs)
         return jsonify({
             "status": 404,
             "error": "User not found"
@@ -88,21 +90,17 @@ def admin_required(f):
                     'error': 'Your session has expired. Please login again'
                 }), 401
 
+            user = payload['username']
+            is_admin = payload['is_admin']
+            if user:
+                if is_admin == 'True':
+                    return f(current_user=user, *args, **kwargs)
+                return jsonify({"status": 401, "error": "You are not an admin user"}), 401
+            return jsonify({"status": 404, "error": "User not found"}), 404
         else:
             return jsonify({
                 "status": 401,
                 "error": "You are not logged in. Please login"
             }), 401
-
-        user = payload['username']
-        is_admin = payload['is_admin']
-
-        if user:
-            if is_admin == 'True':
-                return f(*args, **kwargs)
-        return jsonify({
-            "status": 403,
-            "error": "You are not authorized to access this page"
-        }), 403
 
     return verify
