@@ -1,8 +1,8 @@
 import os
 from app import create_app
+from instance.config import app_config
 
-
-app = create_app(os.getenv("APP_SETTINGS"))
+app = create_app(app_config['development'])
 """defining the configuration to be used"""
 
 

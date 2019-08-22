@@ -1,19 +1,21 @@
-import unittest, json
+import os,unittest, json
 from app import create_app
+from instance.config import app_config
 
 
-from app.connect import test_init_db, destroy_tests
+from app.connect import QuestionerDB
 
+app = create_app(app_config['testing'])
 
-class TestUser(unittest.TestCase):
-    """ Test class for user endpoints """
-
+class UserTestCases(unittest.TestCase):
+    """ Base test class """
     def setUp(self):
         """ Defining test variables """
-
-        self.app = create_app(config_name='testing')
+        self.app = create_app(app_config['testing'])
         self.client = self.app.test_client()
-        self.db = test_init_db()
+        self.app_context = self.app
+        self.app.testing = True
+
 
         self.user = {
             "firstname": "StandUps",
@@ -22,7 +24,7 @@ class TestUser(unittest.TestCase):
             "email": "tam@gmail.com",
             "phone_number": "123456789",
             "is_admin": "True",
-            "username": "Rough",
+            "username": "Scupper",
             "password": "Ch@mp19?yes"
         }
         self.user1 = {
@@ -45,7 +47,7 @@ class TestUser(unittest.TestCase):
             "email": "tamergmail.com",
             "phone_number": "1234534",
             "is_admin": "True",
-            "username": "Roughdf",
+            "username": "Scupperdf",
             "password": "Ch@mp19?yes"
         }
         self.user6 = {
@@ -55,11 +57,11 @@ class TestUser(unittest.TestCase):
             "email": "tamer@gmail.com",
             "phone_number": "1234534",
             "is_admin": "True",
-            "username": "Roughdf",
+            "username": "Scupperdf",
             "password": "Ch@mp19?yes"
         }
         self.login = {
-            "username": "Rough",
+            "username": "Scupper",
             "password": "Ch@mp19?yes"
         }
         self.login1 = {
@@ -71,7 +73,7 @@ class TestUser(unittest.TestCase):
             "password": "Ch@mp19?yes"
         }
         self.login3 = {
-            "username": "Rough",
+            "username": "Scuppersds",
             "password": ""
         }
         self.login4 = {
@@ -79,17 +81,20 @@ class TestUser(unittest.TestCase):
             "password": "nnmmiiijjjjuu"
         }
 
+    def tear_down(self):
+        """This function destroys objests created during the test run"""
+        destroy_tests()
 
-    # def test_user_signup(self):
-    #     """ Test signup user """
-    #
-    #     check = self.client.post(
-    #         "/api/v2/signup", data=json.dumps(self.user), content_type="application/json")
-    #     result = json.loads(check.data.decode())
-    #
-    #     self.assertEqual(check.status_code, 201)
-    #     self.assertEqual(result["status"], 201)
-    #     self.assertIn("Truant", str(result))
+    def test_user_signup(self):
+        """ Test signup user """
+
+        check = self.client.post(
+            "/api/v2/signup", data=json.dumps(self.user), content_type="application/json")
+        result = json.loads(check.data.decode())
+
+        self.assertEqual(check.status_code, 201)
+        self.assertEqual(result[1].get("status"), 201)
+        self.assertIn("tam@gmail.com", result[0].get('email'))
 
 
     def test_validate_phone_number(self):
@@ -97,6 +102,7 @@ class TestUser(unittest.TestCase):
         response = self.client.post(
             '/api/v2/signup', data=json.dumps(self.user2), content_type="application/json")
         result = json.loads(response.data)
+
         self.assertTrue(result["message"],
                         "Please input valid phone number")
         self.assertTrue(response.status_code, 400)
@@ -115,7 +121,8 @@ class TestUser(unittest.TestCase):
     #     response = self.client.post(
     #         '/api/v2/signup', data=json.dumps(self.user), content_type="application/json")
     #     result = json.loads(response.data)
-    #     self.assertEqual(result["message"], "Username exists")
+    #     # import pdb; pdb.set_trace()
+    #     self.assertEqual(result[1]["message"], "Username exists")
     #     self.assertEqual(response.status_code, 400)
     #
     # def test_user_login(self):
@@ -126,7 +133,7 @@ class TestUser(unittest.TestCase):
     #
     #     self.assertEqual(result["status"], 200)
     #     self.assertEqual(result["message"], "User logged in successfully")
-
+    #
     def test_user_exists(self):
         response1 = self.client.post(
             "/api/v2/login", data=json.dumps(self.login1), content_type="application/json")
@@ -156,11 +163,9 @@ class TestUser(unittest.TestCase):
         self.assertEqual(result3["status"], 400)
         self.assertEqual(result3["message"], "Password is required")
 
-    def tear_down(self):
-        """This function destroys objests created during the test run"""
-        with self.app.app_context():
-            destroy_tests()
-            self.db.close()
+    def tearDown(self):
+        """Method to destroy test database tables"""
+        QuestionerDB.drop_tables()
 
 
 if __name__ == "__main__":

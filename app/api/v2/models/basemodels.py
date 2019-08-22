@@ -6,29 +6,29 @@ from flask import jsonify, make_response, request
 from instance.config import Config
 
 
-
-from app.connect import init_db
+from app.connect import QuestionerDB
+# from app.connect import init_db
 
 SECRET_KEY = Config.SECRET_KEY
 
 
-class BaseModels(object):
+class BaseModels(QuestionerDB):
     """ contains methods common to other models """
 
-    def __init__(self):
-        """initialize the database"""
-        self.db = init_db()
-
-    def update_item(self, table, field, data, item_field, item_id):
-        """update the field of an item given the item_id"""
-
-        dbconn = self.db
-        curr = dbconn.cursor()
-        updated = curr.execute("UPDATE {} SET {}='{}' \
-                     WHERE {} = {} ;".format(table, field, data, item_field, item_id))
-        dbconn.commit()
-        if updated:
-            return True
+    # def __init__(self):
+    #     """initialize the database"""
+    #     self.db = init_db()
+    #
+    # def update_item(self, table, field, data, item_field, item_id):
+    #     """update the field of an item given the item_id"""
+    #
+    #     dbconn = self.db
+    #     curr = dbconn.cursor()
+    #     updated = curr.execute("UPDATE {} SET {}='{}' \
+    #                  WHERE {} = {} ;".format(table, field, data, item_field, item_id))
+    #     dbconn.commit()
+    #     if updated:
+    #         return True
 
     @staticmethod
     def generate_auth_token(username, is_admin):
@@ -51,7 +51,7 @@ def login_required(f):
         if 'Authorization' in request.headers:
             token = request.headers['Authorization']
             try:
-                payload = jwt.decode(token, SECRET_KEY, algorithm='HS256')
+                payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
             except jwt.ExpiredSignatureError:
                 return jsonify({
                     'status': 401,
@@ -83,7 +83,7 @@ def admin_required(f):
         if 'Authorization' in request.headers:
             token = request.headers['Authorization']
             try:
-                payload = jwt.decode(token, SECRET_KEY, algorithm='HS256')
+                payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
             except jwt.ExpiredSignatureError:
                 return jsonify({
                     'status': 401,
@@ -93,7 +93,7 @@ def admin_required(f):
             user = payload['username']
             is_admin = payload['is_admin']
             if user:
-                if is_admin == 'True':
+                if is_admin == True:
                     return f(current_user=user, *args, **kwargs)
                 return jsonify({"status": 401, "error": "You are not an admin user"}), 401
             return jsonify({"status": 404, "error": "User not found"}), 404
