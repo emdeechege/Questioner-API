@@ -140,7 +140,7 @@ def login():
             "message": "User does not exist"
         }), 404
 
-    curr = user.db.cursor()
+    curr = user.db.conn.cursor()
     login_query = "SELECT * FROM users WHERE username = '%s'" % (
         username)
     curr.execute(login_query)

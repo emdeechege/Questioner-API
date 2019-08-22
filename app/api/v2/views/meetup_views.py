@@ -1,11 +1,11 @@
 from flask import jsonify, Blueprint, request, json, make_response
-from ..models.meetups_models import Meetup, Rsvp
+from ..models.meetups_models import Meetup
 from ..models.basemodels import login_required, admin_required
 
 v2_meetup = Blueprint('meetup', __name__, url_prefix='/api/v2')
 
 MEETUPS = Meetup()
-RSVP = Rsvp()
+# RSVP = Rsvp()
 
 
 @v2_meetup.route('/meetups', methods=['POST'])
